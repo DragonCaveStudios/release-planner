@@ -156,7 +156,7 @@
       <label class="block"><span class="text-xs font-semibold text-zinc-400">Number of singles</span><input id="setSingles" type="number" min="0" max="12" class="field mt-1.5" /></label>
       <label class="block"><span class="text-xs font-semibold text-zinc-400">Weeks between releases</span><input id="setWeeks" type="number" min="1" max="12" class="field mt-1.5" /></label>
       <label class="block"><span class="text-xs font-semibold text-zinc-400">Distributor lead time (days)</span><input id="setLead" type="number" min="0" max="60" class="field mt-1.5" /></label>
-      <label class="block"><span class="text-xs font-semibold text-zinc-400">Video due (days before release)</span><input id="setVideo" type="number" min="0" max="30" class="field mt-1.5" /></label>
+      <label class="block"><span class="text-xs font-semibold text-zinc-400">Video due (days before submission)</span><input id="setVideo" type="number" min="0" max="30" class="field mt-1.5" /></label>
       <label class="col-span-2 block"><span class="text-xs font-semibold text-zinc-400">Spotify editorial pitch (days before release)</span><input id="setPitch" type="number" min="0" max="30" class="field mt-1.5" /></label>
     </div>
     <p class="text-xs text-zinc-500 mt-3">Tip: many distributors recommend submitting 2–4 weeks before release. Spotify for Artists asks for editorial pitches at least 7 days before release, and the track must already be delivered to Spotify.</p>
@@ -231,7 +231,7 @@ function hydrateIcons(root = document) {
 const STORAGE_KEY = 'musicReleasePlanner:v2';
 
 const AUDIO_TASKS = [
-  { key: 'artwork',   label: 'Artwork',                   sub: '3000×3000px, no URLs/handles',           icon: 'image' },
+  { key: 'artwork',   label: 'Artwork',                   sub: 'From the video · 3000×3000px, no URLs/handles',           icon: 'image' },
   { key: 'metadata',  label: 'Metadata & ISRC',           sub: 'Lyrics, composer & lyricist real names', icon: 'file' },
   { key: 'wav',       label: 'WAV File (Final Master)',   sub: '16-bit, 44.1kHz',                        icon: 'fileAudio' },
   { key: 'submitted', label: 'Submitted to Distributor',  sub: null,                                     icon: 'send' },
@@ -407,7 +407,7 @@ function buildReleases(dateStr = state.releaseDate) {
     r.named = !!custom;
     r.name = custom || r.label;
     r.deadline = addDays(r.date, -state.leadDays);
-    r.videoDue = addDays(r.date, -state.videoLeadDays);
+    r.videoDue = addDays(r.deadline, -state.videoLeadDays);   // video comes first: artwork is taken from it
     r.pitchDue = addDays(r.date, -state.pitchDays);
     r.checks = state.checks[r.id] || {};
     r.audioDone = AUDIO_TASKS.filter((x) => r.checks[x.key]).length;
@@ -443,7 +443,7 @@ function statusOf(r) {
   if (r.audioDone + r.videoDone > 0) return { label: 'In Progress', tone: 'blue' };
   return { label: 'Planning', tone: 'light' };
 }
-function projectStart(rs) { return rs.reduce((m, r) => (r.deadline < m ? r.deadline : m), rs[0].deadline); }
+function projectStart(rs) { return rs.reduce((m, r) => { const e = r.videoDue < r.deadline ? r.videoDue : r.deadline; return e < m ? e : m; }, rs[0].videoDue); }
 
 /* ---------------- UI atoms ---------------- */
 const TONES = {
@@ -536,10 +536,10 @@ function viewTimeline(rs) {
         <p class="text-sm text-zinc-400">${esc(fmtFull(r.date))}${r.dRel >= 0 ? ` · ${r.dRel === 0 ? 'today' : `in ${plural(r.dRel, 'day')}`}` : ''}</p>
         ${r.warn ? `<p class="mt-1 text-xs text-orange-300 flex items-center gap-1.5">${ic('alert', 'w-3.5 h-3.5')}${esc(r.warn)}</p>` : ''}
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-3">
+          <div class="rounded-lg bg-[#1d1d1d] px-3 py-2"><p class="text-[11px] text-zinc-500">Video Due</p><p class="text-sm font-semibold text-white">${fmtShort(r.videoDue)}</p><p class="text-[11px] ${vid.cls} truncate">${vid.text}</p></div>
           <div class="rounded-lg bg-[#1d1d1d] px-3 py-2"><p class="text-[11px] text-zinc-500">Submission</p><p class="text-sm font-semibold text-white">${fmtShort(r.deadline)}</p><p class="text-[11px] ${sub.cls} truncate">${sub.text}</p></div>
           <div class="rounded-lg bg-[#1d1d1d] px-3 py-2"><p class="text-[11px] text-zinc-500">Pitch By</p><p class="text-sm font-semibold text-white">${fmtShort(r.pitchDue)}</p><p class="text-[11px] ${pit.cls} truncate">${pit.text}</p></div>
-          <div class="rounded-lg bg-[#1d1d1d] px-3 py-2"><p class="text-[11px] text-zinc-500">Video Due</p><p class="text-sm font-semibold text-white">${fmtShort(r.videoDue)}</p><p class="text-[11px] ${vid.cls} truncate">${vid.text}</p></div>
-          <div class="rounded-lg bg-[#1d1d1d] px-3 py-2"><p class="text-[11px] text-zinc-500">Status</p><div class="flex gap-1.5 mt-1">${circle(r.audioReady, 'Audio & assets')}${circle(r.videoReady, 'Video')}${circle(r.submitted, 'Submitted')}${circle(r.pitched, 'Pitched')}</div><p class="text-[10px] text-zinc-600 mt-1 hidden sm:block">Audio · Video · Sent · Pitch</p></div>
+          <div class="rounded-lg bg-[#1d1d1d] px-3 py-2"><p class="text-[11px] text-zinc-500">Status</p><div class="flex gap-1.5 mt-1">${circle(r.videoReady, 'Video')}${circle(r.audioReady, 'Audio & artwork')}${circle(r.submitted, 'Submitted')}${circle(r.pitched, 'Pitched')}</div><p class="text-[10px] text-zinc-600 mt-1 hidden sm:block">Video · Audio · Sent · Pitch</p></div>
         </div>
       </button>
     </li>`;
@@ -903,13 +903,13 @@ function render() {
 }
 
 function scheduleSummary() {
-  return `${plural(state.numSingles, 'single')}, ${state.weeksBetween} weeks apart · submit ${state.leadDays} days before · video ${state.videoLeadDays} days before`;
+  return `${plural(state.numSingles, 'single')}, ${state.weeksBetween} weeks apart · video ${state.videoLeadDays} days before submission · submit ${state.leadDays} days before release`;
 }
 
 function renderLanding() {
   const input = $('#landDate');
   if (document.activeElement !== input) input.value = state.releaseDate || '';
-  const totalWeeks = Math.round((state.numSingles * state.weeksBetween * 7 + state.leadDays) / 7) + 1;
+  const totalWeeks = Math.round((state.numSingles * state.weeksBetween * 7 + state.leadDays + state.videoLeadDays) / 7) + 1;
   $('#landSubtitle').textContent = `Set your album release date — we'll calculate the entire ${totalWeeks}-week rollout backwards`;
   $('#landSettingsSummary').textContent = `${scheduleSummary()} · Customize`;
   const hint = $('#landHint');
@@ -1061,8 +1061,8 @@ function buildPrint() {
   const tick = (b) => (b ? ' ✓' : '');
   const rows = rs.map((r) => `<tr>
     <td><b>${esc(r.name)}</b>${r.named ? `<br><span class="m">${esc(r.label)}</span>` : ''}${r.warn ? `<br><span class="warn">${esc(r.warn)}</span>` : ''}</td>
-    <td>${fmtDay(r.date)}</td><td>${fmtDay(r.deadline)}${tick(r.submitted)}</td><td>${fmtDay(r.pitchDue)}${tick(r.pitched)}</td>
-    <td>${fmtDay(r.videoDue)}${tick(r.videoReady)}</td><td>${r.audioDone}/${AUDIO_TASKS.length} · ${r.videoDone}/${VIDEO_TASKS.length}</td><td>${esc(r.status.label)}</td></tr>`).join('');
+    <td>${fmtDay(r.videoDue)}${tick(r.videoReady)}</td><td>${fmtDay(r.deadline)}${tick(r.submitted)}</td>
+    <td>${fmtDay(r.pitchDue)}${tick(r.pitched)}</td><td>${fmtDay(r.date)}</td><td>${r.audioDone}/${AUDIO_TASKS.length} · ${r.videoDone}/${VIDEO_TASKS.length}</td><td>${esc(r.status.label)}</td></tr>`).join('');
   const { tot, counted } = totalDuration();
   const tracks = state.tracks.length ? `<h2>Album Tracklist</h2><table><thead><tr><th style="width:36px">#</th><th>Title</th><th style="width:80px">Time</th></tr></thead><tbody>
     ${state.tracks.map((t, i) => `<tr><td>${i + 1}</td><td>${esc(t.title || '—')}</td><td>${esc(tidyDur(t.duration) || '—')}</td></tr>`).join('')}
@@ -1087,8 +1087,8 @@ function buildPrint() {
       <h1>${esc(title)}</h1><div>${state.artist.trim() ? `${esc(state.artist.trim())} · ` : ''}Album release ${fmtFull(album.date)}</div></div>
       <div class="m" style="margin-left:auto;text-align:right">Release plan<br>Printed ${fmtMed(today())}</div></div>
     <h2>Release Schedule</h2>
-    <p class="m">Submit ${state.leadDays} days before release · pitch ${state.pitchDays} days before · video ${state.videoLeadDays} days before. ✓ = done.</p>
-    <table><thead><tr><th>Release</th><th>Release date</th><th>Submit by</th><th>Pitch by</th><th>Video due</th><th>Checklist · Video</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+    <p class="m">Video ${state.videoLeadDays} days before submission (artwork comes from it) · submit ${state.leadDays} days before release · pitch ${state.pitchDays} days before release. ✓ = done.</p>
+    <table><thead><tr><th>Release</th><th>Video due</th><th>Submit by</th><th>Pitch by</th><th>Release date</th><th>Checklist · Video</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
     ${tracks}
     ${det ? `<h2>Track Details</h2>${det}` : ''}
     ${res ? `<h2>Release Results</h2>${res}` : ''}`;
