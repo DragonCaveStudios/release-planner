@@ -52,15 +52,38 @@
 </head>
 <body class="bg-black text-zinc-200 antialiased min-h-screen">
 
-<!-- ================= LANDING ================= -->
+<!-- ================= STUDIO: home + artist pages ================= -->
+<div id="studio" class="hidden min-h-screen">
+  <header class="bg-black border-b border-gold-500/40">
+    <div class="max-w-[1232px] mx-auto px-4 py-4 flex items-center gap-3">
+      <a href="#/" class="flex items-center gap-3 min-w-0 flex-1">
+        <img data-logo alt="DragonCave Studios" class="w-11 h-11 shrink-0 rounded-xl border border-gold-500/70 bg-black" />
+        <span class="min-w-0">
+          <span class="block text-[10px] sm:text-[11px] font-bold tracking-[.15em] sm:tracking-[.3em] uppercase text-gold-400 truncate">DragonCave Studios</span>
+          <span class="block font-bold text-white text-base sm:text-xl leading-tight truncate">Music Release Strategy Planner</span>
+        </span>
+      </a>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button data-action="import" title="Import a backup" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="upload" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Import</span></button>
+        <button data-action="export" title="Back up everything" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="download" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Backup</span></button>
+        <button data-action="reset" title="Reset everything" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="refresh" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Reset</span></button>
+      </div>
+    </div>
+  </header>
+  <main id="studioMain" class="max-w-[1232px] mx-auto px-4 py-8"></main>
+</div>
+
+<!-- ================= LANDING (set a release's date) ================= -->
 <div id="landing" class="hidden min-h-screen flex items-center justify-center px-4 py-10">
   <div class="w-full max-w-[672px] rounded-2xl bg-[#0d0d0d] border border-gold-500/50 p-6 sm:p-8 shadow-[0_0_60px_-20px_rgba(220,20,20,.35)]">
+    <a id="landBack" href="#/" class="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-gold-400"><span data-icon="arrowLeft" data-icon-class="w-3.5 h-3.5"></span><span id="landBackName">Back</span></a>
     <img data-logo alt="DragonCave Studios" class="mx-auto w-20 h-20 rounded-2xl border-2 border-gold-500 bg-black" />
     <p class="mt-3 text-center text-[11px] font-bold tracking-[.35em] uppercase text-gold-400">DragonCave Studios</p>
     <h1 class="mt-3 text-center text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Backwards-Engineered Planner</h1>
+    <p id="landContext" class="mt-1 text-center text-sm font-semibold text-gold-300"></p>
     <p id="landSubtitle" class="mt-2 text-center text-zinc-400"></p>
 
-    <label for="landDate" class="block mt-7 text-sm font-semibold text-zinc-200">Final Album Release Date (Friday)</label>
+    <label id="landDateLabel" for="landDate" class="block mt-7 text-sm font-semibold text-zinc-200">Final Album Release Date (Friday)</label>
     <div class="mt-2 relative">
       <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" data-icon="calendar" data-icon-class="w-5 h-5"></span>
       <input id="landDate" type="date" class="field !pl-11 !py-2.5" />
@@ -87,13 +110,13 @@
 <div id="app" class="hidden">
   <header class="bg-black border-b border-gold-500/40">
     <div class="max-w-[1232px] mx-auto px-4 py-4 flex items-center gap-3">
-      <img data-logo alt="DragonCave Studios" class="w-11 h-11 shrink-0 rounded-xl border border-gold-500/70 bg-black" />
+      <a id="planBack" href="#/" title="Back to artist" aria-label="Back to artist" class="shrink-0 grid place-items-center w-9 h-9 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-800"><span data-icon="arrowLeft" data-icon-class="w-4 h-4"></span></a>
+      <img data-logo alt="DragonCave Studios" class="hidden sm:block w-11 h-11 shrink-0 rounded-xl border border-gold-500/70 bg-black" />
       <div class="min-w-0 flex-1">
-        <h1 class="font-bold text-white text-base sm:text-xl leading-tight truncate">Music Release Strategy Planner</h1>
+        <h1 id="planTitle" class="font-bold text-white text-base sm:text-xl leading-tight truncate"></h1>
         <p id="hdrSub" class="text-xs sm:text-sm text-zinc-500 truncate"></p>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button data-action="import" title="Import JSON" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="upload" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Import</span></button>
         <button data-action="export" title="Backup (export JSON)" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="download" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Backup</span></button>
         <button data-action="reset" title="Reset" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="refresh" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Reset</span></button>
         <button data-action="print" title="Print or save as PDF" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="printer" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Print</span></button>
@@ -105,7 +128,7 @@
   <section class="bg-[#0c0c0c] border-b border-zinc-800/80">
     <div class="max-w-[1232px] mx-auto px-4 py-6 flex flex-col md:flex-row md:items-end gap-5">
       <div class="flex-1">
-        <label for="mainDate" class="block text-sm font-semibold text-zinc-200 mb-2">Target Album Release Date</label>
+        <label id="mainDateLabel" for="mainDate" class="block text-sm font-semibold text-zinc-200 mb-2">Target Album Release Date</label>
         <div class="relative">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" data-icon="calendar" data-icon-class="w-5 h-5"></span>
           <input id="mainDate" type="date" class="w-full rounded-lg bg-[#232323] border border-zinc-700 pl-12 pr-4 py-4 text-lg font-semibold text-white outline-none focus:border-gold-500" />
@@ -119,7 +142,7 @@
         </div>
         <div class="w-px bg-zinc-700"></div>
         <div class="md:text-right">
-          <p class="text-[11px] uppercase tracking-wider text-zinc-500 font-medium">Album Release</p>
+          <p id="statAlbumLabel" class="text-[11px] uppercase tracking-wider text-zinc-500 font-medium">Album Release</p>
           <p id="statAlbum" class="text-lg font-bold text-gold-400 mt-1"></p>
         </div>
       </div>
@@ -151,8 +174,9 @@
     </div>
     <p class="text-sm text-zinc-400 mt-1">The schedule updates as you change these.</p>
     <div class="grid grid-cols-2 gap-4 mt-5">
+      <label class="col-span-2 block"><span class="text-xs font-semibold text-zinc-400">Release type</span><select id="setType" class="field mt-1.5"><option value="album">Album (singles, then the album)</option><option value="ep">EP (singles, then the EP)</option><option value="single">Single (one track)</option></select></label>
       <label class="col-span-2 block"><span class="text-xs font-semibold text-zinc-400">Artist name</span><input id="setArtist" class="field mt-1.5" maxlength="100" placeholder="e.g. Nova Lane" /></label>
-      <label class="col-span-2 block"><span class="text-xs font-semibold text-zinc-400">Album title</span><input id="setAlbum" class="field mt-1.5" maxlength="100" placeholder="e.g. Midnight Frequencies" /></label>
+      <label class="col-span-2 block"><span id="setAlbumLabel" class="text-xs font-semibold text-zinc-400">Album title</span><input id="setAlbum" class="field mt-1.5" maxlength="100" placeholder="e.g. Midnight Frequencies" /></label>
       <label class="block"><span class="text-xs font-semibold text-zinc-400">Number of singles</span><input id="setSingles" type="number" min="0" max="12" class="field mt-1.5" /></label>
       <label class="block"><span class="text-xs font-semibold text-zinc-400">Weeks between releases</span><input id="setWeeks" type="number" min="1" max="12" class="field mt-1.5" /></label>
       <label class="block"><span class="text-xs font-semibold text-zinc-400">Distributor lead time (days)</span><input id="setLead" type="number" min="0" max="60" class="field mt-1.5" /></label>
@@ -164,6 +188,17 @@
   </div>
 </div>
 
+<div id="dialog" class="hidden fixed inset-0 z-50">
+  <div data-action="dialog-cancel" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+  <form id="dialogForm" class="relative mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-md rounded-2xl bg-[#121212] border border-gold-500/40 p-6 shadow-2xl" novalidate>
+    <h2 id="dialogTitle" class="text-lg font-bold text-white"></h2>
+    <div id="dialogBody" class="mt-4 space-y-4"></div>
+    <div class="mt-6 flex justify-end gap-2">
+      <button type="button" data-action="dialog-cancel" class="rounded-lg px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-800">Cancel</button>
+      <button type="submit" id="dialogOk" class="rounded-lg px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-500">OK</button>
+    </div>
+  </form>
+</div>
 <div id="printArea"></div>
 <input id="importFile" type="file" accept="application/json,.json" class="hidden" />
 <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] pointer-events-none opacity-0 translate-y-2 transition-all duration-300 rounded-lg bg-zinc-900 border border-zinc-700 shadow-2xl px-4 py-2.5 text-sm text-white"></div>
@@ -215,6 +250,8 @@ const I = {
   chart: '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
   tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/>',
   target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  arrowLeft: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
   alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>',
 };
@@ -228,7 +265,13 @@ function hydrateIcons(root = document) {
 }
 
 /* ---------------- Config ---------------- */
-const STORAGE_KEY = 'musicReleasePlanner:v2';
+const STUDIO_KEY = 'musicReleasePlanner:v3';   // studio -> artists -> releases
+const LEGACY_KEY = 'musicReleasePlanner:v2';   // earlier single-plan version (migrated on first load)
+const RELEASE_TYPES = {
+  album:  { label: 'Album',  singles: 5, hint: 'Singles, then the album' },
+  ep:     { label: 'EP',     singles: 2, hint: 'Singles, then the EP' },
+  single: { label: 'Single', singles: 0, hint: 'One track' },
+};
 
 const AUDIO_TASKS = [
   { key: 'artwork',   label: 'Artwork',                   sub: 'From the video · 3000×3000px, no URLs/handles',           icon: 'image' },
@@ -302,7 +345,10 @@ const SOCIAL = [
 const ALL_POST_IDS = SOCIAL.flatMap((s) => s.posts.map((p) => p[0]));
 
 const defaults = () => ({
-  version: 2,
+  version: 3,
+  id: '',
+  artistId: '',
+  type: 'album',
   created: false,
   releaseDate: '',
   artist: '',
@@ -369,6 +415,10 @@ function normalize(raw) {
   s.view = o.view === 'list' ? 'list' : 'grid';
   s.socialRelease = typeof o.socialRelease === 'string' ? o.socialRelease : d.socialRelease;
   s.pitchDays = clampInt(o.pitchDays, 0, 30, d.pitchDays);
+  s.id = typeof o.id === 'string' ? o.id : '';
+  s.artistId = typeof o.artistId === 'string' ? o.artistId : '';
+  s.type = RELEASE_TYPES[o.type] ? o.type : 'album';
+  if (s.type === 'single') s.numSingles = 0;
   for (const [k, v] of Object.entries(obj(o.shifts))) { const n = parseInt(v, 10); if (/^single-\d+$/.test(k) && n && Math.abs(n) <= 364) s.shifts[k] = n; }
   const dk = new Set(DETAIL_FIELDS.map((f) => f.k));
   for (const [k, v] of Object.entries(obj(o.details))) { s.details[k] = {}; for (const [f, x] of Object.entries(obj(v))) { if (dk.has(f) && typeof x === 'string') s.details[k][f] = x; if (f === 'explicit') s.details[k].explicit = !!x; } }
@@ -381,10 +431,65 @@ function normalize(raw) {
   return s;
 }
 const uid = () => Math.random().toString(36).slice(2, 10);
-function load() { try { const r = localStorage.getItem(STORAGE_KEY); return r ? normalize(JSON.parse(r)) : defaults(); } catch { return defaults(); } }
-let state = load();
-function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { toast('Could not save: browser storage unavailable'); } }
-if (state.created && !state.createdAt) { state.createdAt = new Date().toISOString(); save(); }
+const okTime = (x) => typeof x === 'string' && !Number.isNaN(Date.parse(x));
+function emptyStudio() { return { version: 3, artists: [], releases: [], createdAt: new Date().toISOString(), lastBackup: '', backupSnooze: '' }; }
+function normalizeStudio(raw) {
+  const o = raw && typeof raw === 'object' ? raw : {};
+  const st = emptyStudio();
+  const aids = new Set();
+  for (const a of Array.isArray(o.artists) ? o.artists : []) {
+    if (!a || typeof a !== 'object') continue;
+    const id = String(a.id || uid());
+    if (aids.has(id)) continue;
+    aids.add(id);
+    st.artists.push({ id, name: String(a.name ?? '').trim().slice(0, 100) || 'Unnamed artist' });
+  }
+  const rids = new Set();
+  for (const raw2 of Array.isArray(o.releases) ? o.releases : []) {
+    const r = normalize(raw2);
+    if (!aids.has(r.artistId)) continue;
+    if (!r.id || rids.has(r.id)) r.id = uid();
+    rids.add(r.id);
+    st.releases.push(r);
+  }
+  if (okTime(o.createdAt)) st.createdAt = o.createdAt;
+  st.lastBackup = okTime(o.lastBackup) ? o.lastBackup : '';
+  st.backupSnooze = isISO(o.backupSnooze) ? o.backupSnooze : '';
+  return st;
+}
+// The previous version stored a single plan; move it into the first artist's first release.
+function migrateLegacy(old) {
+  const st = emptyStudio();
+  const plan = normalize(old);
+  const hasData = plan.releaseDate || plan.tracks.length || Object.keys(plan.names).length || Object.keys(plan.checks).length;
+  if (!hasData) return st;
+  const a = { id: uid(), name: String(old.artist || '').trim() || 'My Artist' };
+  plan.id = uid(); plan.artistId = a.id; plan.type = 'album';
+  st.artists.push(a); st.releases.push(plan);
+  if (okTime(old.createdAt)) st.createdAt = old.createdAt;
+  if (okTime(old.lastBackup)) st.lastBackup = old.lastBackup;
+  return st;
+}
+function loadStudio() {
+  try {
+    const r = localStorage.getItem(STUDIO_KEY);
+    if (r) return normalizeStudio(JSON.parse(r));
+    const old = localStorage.getItem(LEGACY_KEY);
+    if (old) return migrateLegacy(JSON.parse(old));
+  } catch { /* fall through to a fresh studio */ }
+  return emptyStudio();
+}
+let studio = loadStudio();
+let state = null;   // the release currently open in the planner (an object inside studio.releases)
+function save() { try { localStorage.setItem(STUDIO_KEY, JSON.stringify(studio)); } catch { toast('Could not save: browser storage unavailable'); } }
+save();
+
+const T = (rel = state) => RELEASE_TYPES[(rel && rel.type) || 'album'].label;
+const TL = (rel = state) => ((rel && rel.type) === 'ep' ? 'EP' : T(rel).toLowerCase());   // for use mid-sentence
+const artistOf = (rel = state) => studio.artists.find((a) => rel && a.id === rel.artistId);
+const artistName = (rel = state) => (artistOf(rel) || {}).name || '';
+const releaseTitle = (rel = state) => ((rel.names.album || '').trim() || `Untitled ${T(rel)}`);
+function withRelease(rel, fn) { const prev = state; state = rel; try { return fn(); } finally { state = prev; } }
 
 let editing = null;               // release id whose name is being edited
 const collapsed = new Set();      // collapsed social sections
@@ -401,7 +506,7 @@ function buildReleases(dateStr = state.releaseDate) {
     const id = `single-${i}`, shift = state.shifts[id] || 0;
     list.push({ id, kind: 'single', num: i, label: `Single ${i}`, shift, planned: addDays(album, -interval * (n - i + 1)), date: addDays(album, -interval * (n - i + 1) + shift) });
   }
-  list.push({ id: 'album', kind: 'album', label: 'Album', shift: 0, date: album });
+  list.push({ id: 'album', kind: 'album', label: T(), shift: 0, date: album });
   for (const r of list) {
     const custom = (state.names[r.id] || '').trim();
     r.named = !!custom;
@@ -428,7 +533,7 @@ function buildReleases(dateStr = state.releaseDate) {
   list.forEach((r, i) => {
     r.warn = '';
     if (r.kind !== 'single') return;
-    if (r.date >= alb.date) { r.warn = 'Lands on or after the album release'; return; }
+    if (r.date >= alb.date) { r.warn = `Lands on or after the ${TL()} release`; return; }
     const near = [list[i - 1], list[i + 1]].filter((x) => x && x !== r && Math.abs(diffDays(x.date, r.date)) < 7);
     if (near.length) r.warn = `Within a week of ${near.map((x) => x.name).join(' & ')}`;
   });
@@ -498,18 +603,18 @@ function taskRow(r, t, sub) {
 }
 function nameEl(r, textCls) {
   if (editing === r.id) {
-    return `<input id="name-edit" data-name-edit="${r.id}" maxlength="100" value="${esc(r.named ? r.name : '')}" placeholder="${r.kind === 'album' ? 'Album title' : 'Track name'}"
+    return `<input id="name-edit" data-name-edit="${r.id}" maxlength="100" value="${esc(r.named ? r.name : '')}" placeholder="${r.kind === 'album' ? `${T()} title` : 'Track name'}"
       class="w-full rounded-md bg-[#1f1f1f] border border-gold-500 px-2 py-1 ${textCls} font-semibold text-white outline-none" />`;
   }
-  return `<button data-action="edit-name" data-id="${r.id}" title="Click to name this ${r.kind === 'album' ? 'album' : 'track'}" class="group inline-flex items-center gap-1.5 max-w-full text-left rounded hover:bg-white/5 -mx-1 px-1">
+  return `<button data-action="edit-name" data-id="${r.id}" title="Click to name this ${r.kind === 'album' ? TL() : 'track'}" class="group inline-flex items-center gap-1.5 max-w-full text-left rounded hover:bg-white/5 -mx-1 px-1">
     <span class="truncate font-semibold text-white ${textCls}">${esc(r.name)}</span>${ic('pencil', 'w-3.5 h-3.5 shrink-0 text-zinc-500 group-hover:text-red-500')}
   </button>`;
 }
 const subLabel = (r) => {
   if (r.kind === 'album') {
     const n = state.tracks.length;
-    const t = n ? plural(n, 'track') : 'Album';
-    return r.named && n ? `Album · ${t}` : t;
+    const t = n ? plural(n, 'track') : T();
+    return r.named && n ? `${T()} · ${t}` : t;
   }
   return r.named ? r.label : 'Single';
 };
@@ -548,7 +653,7 @@ function viewTimeline(rs) {
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
         <h2 class="text-lg sm:text-xl font-bold text-white">${weeksToAlbum + 1}-Week Release Timeline</h2>
-        <p class="text-sm text-zinc-400 mt-1">Project Starts: <span class="font-semibold text-gold-400">${esc(fmtLong(start))}</span> <span class="text-zinc-600">→</span> ${plural(weeksToAlbum, 'week')} to album release</p>
+        <p class="text-sm text-zinc-400 mt-1">Project Starts: <span class="font-semibold text-gold-400">${esc(fmtLong(start))}</span> <span class="text-zinc-600">→</span> ${plural(weeksToAlbum, 'week')} to ${TL()} release</p>
       </div>
       <button data-action="ics" class="inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs font-medium bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200">${ic('calendar')}Add to calendar</button>
     </div>
@@ -658,7 +763,7 @@ function viewReleasesList(rs) {
   const chip = (date, info, done) => `<span class="inline-flex items-center gap-2 rounded-lg bg-[#1d1d1d] border border-zinc-800 px-3 py-1.5">${done !== undefined ? `<span class="${done ? 'text-gold-400' : 'text-red-500'}">${ic('video', 'w-3.5 h-3.5')}</span>` : ''}<span><span class="block text-sm font-semibold text-white whitespace-nowrap">${fmtMed(date)}</span><span class="block text-[11px] ${info.cls} whitespace-nowrap">${info.text}</span></span></span>`;
   const rows = rs.map((r) => `<tr class="border-t border-zinc-800/80 hover:bg-white/[.015]">
     <td class="py-4 pl-4 pr-3 min-w-[180px] max-w-[260px]">${nameEl(r, 'text-base')}${r.named ? `<p class="text-xs text-zinc-500">${esc(r.label)}</p>` : ''}${r.warn ? `<p class="text-[11px] text-orange-300">${esc(r.warn)}</p>` : ''}</td>
-    <td class="py-4 px-3">${r.kind === 'album' ? pill('Album', 'green') : pill('Single', 'grey')}</td>
+    <td class="py-4 px-3">${r.kind === 'album' ? pill(T(), 'green') : pill('Single', 'grey')}</td>
     <td class="py-4 px-3 whitespace-nowrap"><p class="text-sm text-white">${fmtDay(r.date)}</p><p class="text-xs text-zinc-500">${r.dRel > 0 ? `in ${plural(r.dRel, 'day')}` : relInfo(r.dRel)}</p></td>
     <td class="py-4 px-3">${chip(r.videoDue, dueFor(r, r.dVid, r.videoReady), r.videoReady)}</td>
     <td class="py-4 px-3">${chip(r.deadline, dueFor(r, r.dSub, r.submitted))}</td>
@@ -751,10 +856,10 @@ function viewTracklist(rs) {
     </li>`;
   }).join('');
   return `<div class="max-w-3xl">
-    <h2 class="text-xl font-bold text-white">Album Tracklist</h2>
+    <h2 class="text-xl font-bold text-white">${T()} Tracklist</h2>
     <p class="text-zinc-400 mt-1">Manage your album tracks, durations, and order</p>
     <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-      <p class="flex items-center gap-2 text-sm font-semibold text-white"><span class="text-gold-400">${ic('music')}</span>Album Tracklist <span class="text-xs font-normal text-zinc-500">(${plural(state.tracks.length, 'track')}<span id="totalDur">${counted ? ` · ${fmtDur(tot)} total` : ''}</span>)</span></p>
+      <p class="flex items-center gap-2 text-sm font-semibold text-white"><span class="text-gold-400">${ic('music')}</span>${T()} Tracklist <span class="text-xs font-normal text-zinc-500">(${plural(state.tracks.length, 'track')}<span id="totalDur">${counted ? ` · ${fmtDur(tot)} total` : ''}</span>)</span></p>
       <div class="flex gap-2">
         ${missing.length ? `<button data-action="add-singles" class="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold text-zinc-200 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700">${ic('music2', 'w-3.5 h-3.5')}Add named singles (${missing.length})</button>` : ''}
         <button data-action="add-track" class="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold text-red-400 bg-red-600/10 hover:bg-red-600/20 border border-red-600/50">${ic('plus', 'w-3.5 h-3.5')}Add Track</button>
@@ -830,8 +935,8 @@ function weekItems(rs) {
   }
   return items.sort((a, b) => a.date - b.date || (a.release ? 1 : -1));
 }
-function viewThisWeek(rs) {
-  const all = weekItems(rs);
+function viewThisWeek(rs, studioItems) {
+  const all = studioItems || weekItems(rs);
   const now = all.filter((x) => x.d <= 7);
   const overdue = now.filter((x) => x.d < 0).length;
   const t = today();
@@ -839,26 +944,27 @@ function viewThisWeek(rs) {
   const whenCls = (x) => (x.release ? 'text-gold-300' : x.d < 0 ? 'text-red-400' : x.d <= 2 ? 'text-orange-300' : 'text-zinc-300');
   const LIMIT = 6;
   const shown = weekExpanded ? now : now.slice(0, LIMIT);
-  const row = (x) => `<li class="flex items-center gap-3 rounded-lg border px-3 py-2.5 ${x.d < 0 && !x.release ? 'bg-red-600/10 border-red-600/40' : 'bg-[#151515] border-zinc-800'}">
+  const row = (x) => `<li class="min-w-0 flex items-center gap-3 rounded-lg border px-3 py-2.5 ${x.d < 0 && !x.release ? 'bg-red-600/10 border-red-600/40' : 'bg-[#151515] border-zinc-800'}">
       <span class="w-8 h-8 shrink-0 rounded-lg grid place-items-center ${x.release ? 'bg-gold-500/15 text-gold-400' : x.d < 0 ? 'bg-red-600/20 text-red-400' : 'bg-zinc-800 text-zinc-300'}">${ic(x.icon)}</span>
-      <button data-action="goto-release" data-id="${x.r.id}" class="flex-1 min-w-0 text-left" title="Open on the Releases tab">
+      <button data-action="goto-release" data-id="${x.r.id}" ${x.rel ? `data-rel="${x.rel.id}"` : ''} class="flex-1 min-w-0 text-left" title="Open on the Releases tab">
         <span class="block text-sm text-zinc-300 truncate">${x.text}</span>
+        ${x.rel ? `<span class="block text-[11px] text-gold-300/80 truncate">${esc(artistName(x.rel))} · ${esc(releaseTitle(x.rel))}</span>` : ''}
         <span class="block text-xs text-zinc-500">${fmtDay(x.date)} · <span class="${whenCls(x)} font-semibold">${when(x)}</span></span>
       </button>
-      ${x.key ? `<button data-action="quick-done" data-id="${x.r.id}" data-key="${x.key}" title="Mark as done" aria-label="Mark as done" class="w-8 h-8 shrink-0 rounded-full border border-zinc-600 text-zinc-500 hover:border-gold-500 hover:text-gold-400 grid place-items-center">${ic('check', 'w-4 h-4')}</button>` : ''}
+      ${x.key ? `<button data-action="quick-done" data-id="${x.r.id}" data-key="${x.key}" ${x.rel ? `data-rel="${x.rel.id}"` : ''} title="Mark as done" aria-label="Mark as done" class="w-8 h-8 shrink-0 rounded-full border border-zinc-600 text-zinc-500 hover:border-gold-500 hover:text-gold-400 grid place-items-center">${ic('check', 'w-4 h-4')}</button>` : ''}
     </li>`;
   let body;
   if (now.length) {
-    body = `<ul class="mt-4 grid gap-2 lg:grid-cols-2">${shown.map(row).join('')}</ul>
+    body = `<ul class="mt-4 grid grid-cols-1 gap-2 lg:grid-cols-2">${shown.map(row).join('')}</ul>
       ${now.length > LIMIT ? `<button data-action="week-more" class="mt-3 text-xs font-semibold text-gold-400 hover:text-gold-300">${weekExpanded ? 'Show less' : `Show all ${now.length}`}</button>` : ''}`;
   } else {
     const next = all.find((x) => x.d > 7);
-    body = `<p class="mt-3 text-sm text-zinc-400">Nothing due in the next 7 days.${next ? ` Next up: <span class="text-zinc-200">${esc(next.plain)}</span> on ${fmtDay(next.date)} <span class="text-zinc-500">(in ${plural(next.d, 'day')})</span>.` : ' The campaign is complete.'}</p>`;
+    body = `<p class="mt-3 text-sm text-zinc-400">Nothing due in the next 7 days.${next ? ` Next up: <span class="text-zinc-200">${esc(next.plain)}</span>${next.rel ? ` <span class="text-zinc-500">(${esc(artistName(next.rel))})</span>` : ''} on ${fmtDay(next.date)} <span class="text-zinc-500">(in ${plural(next.d, 'day')})</span>.` : (studioItems ? ' No active campaigns right now.' : ' The campaign is complete.')}</p>`;
   }
   return `<section class="mb-8 rounded-2xl border border-zinc-800 bg-[#0d0d0d] p-5">
     <div class="flex flex-wrap items-center gap-2">
       <span class="text-red-500">${ic('bell', 'w-5 h-5')}</span>
-      <h2 class="text-lg font-bold text-white">This Week</h2>
+      <h2 class="text-lg font-bold text-white">This Week</h2>${studioItems ? '<span class="text-xs text-zinc-500">· all artists</span>' : ''}
       <span class="text-xs text-zinc-500">${fmtShort(t)} – ${fmtShort(addDays(t, 7))}</span>
       ${overdue ? pill(`${overdue} overdue`, 'red', 'alert') : now.length ? pill(`${plural(now.length, 'item')}`, 'grey') : ''}
     </div>
@@ -869,23 +975,158 @@ function agoText(d) { return d < 14 ? `${plural(d, 'day')} ago` : d < 60 ? `${Ma
 function dateOnly(x) { return new Date(x.getFullYear(), x.getMonth(), x.getDate()); }
 function backupBanner() {
   const t = today();
-  if (state.backupSnooze && parseISO(state.backupSnooze) > t) return '';
+  if (!studio.artists.length) return '';
+  if (studio.backupSnooze && parseISO(studio.backupSnooze) > t) return '';
   let msg;
-  if (state.lastBackup) {
-    const d = diffDays(dateOnly(new Date(state.lastBackup)), t);
+  if (studio.lastBackup) {
+    const d = diffDays(dateOnly(new Date(studio.lastBackup)), t);
     if (d < 14) return '';
     msg = `Your last backup was ${agoText(d)}.`;
   } else {
-    if (!state.createdAt || diffDays(dateOnly(new Date(state.createdAt)), t) < 3) return '';
-    msg = "You haven't backed up this plan yet.";
+    if (!studio.createdAt || diffDays(dateOnly(new Date(studio.createdAt)), t) < 3) return '';
+    msg = "You haven't backed up your release plans yet.";
   }
   return `<div class="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-orange-500/40 bg-orange-500/10 px-4 py-3">
     <span class="text-orange-300">${ic('alert', 'w-5 h-5')}</span>
-    <p class="flex-1 min-w-[220px] text-sm text-orange-100">${msg} <span class="text-orange-200/70">Your plan is stored only in this browser, so clearing your browser data would erase it.</span></p>
+    <p class="flex-1 min-w-[220px] text-sm text-orange-100">${msg} <span class="text-orange-200/70">Everything is stored only in this browser, so clearing your browser data would erase it.</span></p>
     <button data-action="export" class="rounded-md bg-red-600 hover:bg-red-500 px-3 py-1.5 text-xs font-semibold text-white">Back up now</button>
     <button data-action="snooze-backup" class="rounded-md px-2 py-1.5 text-xs text-orange-200/80 hover:text-white">Remind me in 7 days</button>
   </div>`;
 }
+
+/* ---------------- Studio: home + artist pages ---------------- */
+const initials = (n) => n.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
+const avatar = (a, cls) => `<span class="${cls} shrink-0 rounded-full grid place-items-center font-bold text-white bg-gradient-to-br from-red-600 to-red-900 ring-2 ring-gold-500/70">${esc(initials(a.name))}</span>`;
+
+function relSummary(rel) {
+  return withRelease(rel, () => {
+    if (!rel.created || !isISO(rel.releaseDate)) return { draft: true };
+    const rs = buildReleases();
+    const fin = rs.find((r) => r.kind === 'album');
+    const done = rs.reduce((n, r) => n + r.audioDone + r.videoDone, 0);
+    const pct = Math.round((done / (rs.length * (AUDIO_TASKS.length + VIDEO_TASKS.length))) * 100);
+    const items = weekItems(rs);
+    return { fin, pct, released: fin.dRel < 0, overdue: items.filter((x) => x.d < 0 && !x.release).length, next: items.find((x) => x.d >= 0 && !x.release) };
+  });
+}
+function studioWeekItems() {
+  return studio.releases.filter((r) => r.created && isISO(r.releaseDate))
+    .flatMap((rel) => withRelease(rel, () => weekItems(buildReleases()).map((x) => ({ ...x, rel }))))
+    .sort((a, b) => a.date - b.date || (a.release ? 1 : -1));
+}
+function artistCard(a) {
+  const sums = studio.releases.filter((r) => r.artistId === a.id).map((r) => ({ r, s: relSummary(r) }));
+  const active = sums.filter((x) => !x.s.draft && !x.s.released).sort((p, q) => p.s.fin.date - q.s.fin.date);
+  const overdue = sums.reduce((n, x) => n + (x.s.overdue || 0), 0);
+  const nx = active[0];
+  return `<a href="#/artist/${a.id}" class="rounded-2xl bg-[#111] border border-zinc-800 hover:border-gold-500/60 p-5 flex flex-col gap-4 transition-colors">
+    <div class="flex items-center gap-3">${avatar(a, 'w-14 h-14 text-xl')}
+      <div class="min-w-0 flex-1"><p class="text-lg font-bold text-white truncate">${esc(a.name)}</p>
+      <p class="text-sm text-zinc-400">${plural(sums.length, 'release')}${active.length ? ` · ${active.length} active` : ''}</p></div>
+      ${overdue ? pill(`${overdue} overdue`, 'red', 'alert') : ''}
+    </div>
+    <div class="rounded-lg bg-[#1a1a1a] border border-zinc-800/60 p-3">${nx
+      ? `<p class="text-[11px] uppercase tracking-wider text-zinc-500">Next release</p><p class="text-sm font-semibold text-white truncate">${esc(releaseTitle(nx.r))}</p>
+         <p class="text-xs text-zinc-400">${T(nx.r)} · ${fmtDay(nx.s.fin.date)} · ${relInfo(nx.s.fin.dRel)}</p>
+         <div class="mt-2 flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-zinc-800 overflow-hidden"><div class="h-full bg-gold-500" style="width:${nx.s.pct}%"></div></div><span class="text-[11px] text-zinc-400 tabular-nums">${nx.s.pct}%</span></div>`
+      : '<p class="text-sm text-zinc-500">No active campaign</p>'}</div>
+  </a>`;
+}
+const studioFooter = '<p class="mt-12 text-center text-xs text-zinc-600">A DragonCave Studios tool · All data is saved only in this browser. Use Backup to export it and Import to restore it on another device.</p>';
+const redBtn = 'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-500';
+function renderHome() {
+  document.title = 'Music Release Strategy Planner – DragonCave Studios';
+  const has = studio.artists.length > 0;
+  $('#studioMain').innerHTML = `${backupBanner()}
+    ${has ? viewThisWeek(null, studioWeekItems()) : ''}
+    <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+      <div><h2 class="flex items-center gap-2 text-xl font-bold text-white"><span class="text-gold-400">${ic('users', 'w-5 h-5')}</span>Artists</h2>
+      <p class="text-sm text-zinc-400">Everyone releasing through DragonCave Studios</p></div>
+      ${has ? `<button data-action="add-artist" class="${redBtn}">${ic('plus')}Add artist</button>` : ''}
+    </div>
+    ${has ? `<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${studio.artists.map(artistCard).join('')}</div>` : `
+    <div class="rounded-2xl border border-dashed border-gold-500/40 bg-[#0d0d0d] px-6 py-12 text-center">
+      <img src="${LOGO}" alt="" class="mx-auto w-16 h-16 rounded-2xl border-2 border-gold-500" />
+      <p class="mt-4 text-lg font-bold text-white">Welcome to the studio</p>
+      <p class="mt-1 text-sm text-zinc-400">Add your first artist, then plan their album, EP or single.</p>
+      <button data-action="add-artist" class="mt-5 ${redBtn}">${ic('plus')}Add your first artist</button>
+      <button data-action="import" class="mt-3 block mx-auto text-xs text-zinc-500 hover:text-zinc-300">Have a backup? Import it</button>
+    </div>`}
+    ${studioFooter}`;
+}
+function releaseTile({ r, s }) {
+  return `<div class="relative rounded-2xl bg-[#111] border ${s.overdue ? 'border-red-600/50' : 'border-zinc-800'} hover:border-gold-500/60 transition-colors">
+    <a href="#/release/${r.id}" class="block p-5">
+      <div class="flex flex-wrap items-center gap-2 pr-8">${pill(T(r), r.type === 'album' ? 'green' : 'grey')}
+        ${s.draft ? pill('Draft', 'grey') : s.released ? pill('Released', 'sky') : s.overdue ? pill(`${s.overdue} overdue`, 'red', 'alert') : ''}</div>
+      <p class="mt-2 text-lg font-bold text-white truncate">${esc(releaseTitle(r))}</p>
+      ${s.draft ? '<p class="text-sm text-zinc-500">No release date yet. Open it to set one.</p>' : `
+      <p class="text-sm text-zinc-400">${fmtDay(s.fin.date)} · ${relInfo(s.fin.dRel)}</p>
+      <div class="mt-3 flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-zinc-800 overflow-hidden"><div class="h-full bg-gold-500" style="width:${s.pct}%"></div></div><span class="text-xs text-zinc-400 tabular-nums">${s.pct}%</span></div>
+      ${s.next ? `<p class="mt-2 text-xs text-zinc-400 truncate">Next: ${esc(s.next.plain)} · ${fmtShort(s.next.date)}</p>` : ''}`}
+    </a>
+    <button data-action="delete-release" data-id="${r.id}" title="Delete release" aria-label="Delete release" class="absolute top-4 right-4 p-1.5 rounded-md text-zinc-600 hover:text-red-400 hover:bg-red-500/10">${ic('trash')}</button>
+  </div>`;
+}
+function renderArtist(id) {
+  const a = studio.artists.find((x) => x.id === id);
+  document.title = `${a.name} – Release Planner`;
+  const sums = studio.releases.filter((r) => r.artistId === id).map((r) => ({ r, s: relSummary(r) }));
+  const groups = [
+    ['In progress & upcoming', sums.filter((x) => !x.s.draft && !x.s.released).sort((p, q) => p.s.fin.date - q.s.fin.date)],
+    ['Drafts', sums.filter((x) => x.s.draft)],
+    ['Released', sums.filter((x) => x.s.released).sort((p, q) => q.s.fin.date - p.s.fin.date)],
+  ].filter((g) => g[1].length);
+  const ghost = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium border';
+  $('#studioMain').innerHTML = `
+    <a href="#/" class="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-gold-400">${ic('arrowLeft')}All artists</a>
+    <div class="mt-4 flex flex-wrap items-center gap-4">
+      ${avatar(a, 'w-16 h-16 text-2xl')}
+      <div class="min-w-0 flex-1">
+        <button data-action="rename-artist" data-id="${a.id}" class="group inline-flex items-center gap-2 max-w-full text-left" title="Rename artist">
+          <span class="truncate text-2xl sm:text-3xl font-extrabold text-white">${esc(a.name)}</span>${ic('pencil', 'w-4 h-4 shrink-0 text-zinc-500 group-hover:text-red-500')}</button>
+        <p class="text-sm text-zinc-400">${plural(sums.length, 'release')} · DragonCave Studios</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button data-action="new-release" data-id="${a.id}" class="${redBtn}">${ic('plus')}New release</button>
+        <button data-action="export-artist" data-id="${a.id}" class="${ghost} border-gold-500/50 text-gold-400 hover:bg-gold-500/10" title="Download just this artist's plans">${ic('download')}Export</button>
+        <button data-action="delete-artist" data-id="${a.id}" class="${ghost} border-zinc-700 text-zinc-400 hover:text-red-400 hover:border-red-500/50" title="Delete artist">${ic('trash')}</button>
+      </div>
+    </div>
+    ${groups.length ? groups.map(([title, list]) => `<h3 class="mt-8 mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-400">${title}</h3>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${list.map(releaseTile).join('')}</div>`).join('') : `
+    <div class="mt-8 rounded-2xl border border-dashed border-zinc-700 px-6 py-12 text-center">
+      <span class="inline-block text-zinc-600">${ic('disc', 'w-10 h-10')}</span>
+      <p class="mt-3 text-white font-semibold">No releases yet</p>
+      <p class="mt-1 text-sm text-zinc-400">Start an album, EP or single and the planner works out every date for you.</p>
+      <button data-action="new-release" data-id="${a.id}" class="mt-5 ${redBtn}">${ic('plus')}New release</button>
+    </div>`}
+    ${studioFooter}`;
+}
+
+/* ---------------- Dialog ---------------- */
+let dialogOk = null;
+function openDialog(title, body, okLabel, onOk) {
+  $('#dialogTitle').textContent = title;
+  $('#dialogBody').innerHTML = body;
+  $('#dialogOk').textContent = okLabel;
+  dialogOk = onOk;
+  $('#dialog').classList.remove('hidden');
+  setTimeout(() => { const f = $('#dialogBody input:not([type=radio])'); if (f) { f.focus(); f.select(); } }, 30);
+}
+function closeDialog() { $('#dialog').classList.add('hidden'); dialogOk = null; }
+const nameField = (label, name, value, ph) => `<label class="block"><span class="text-xs font-semibold text-zinc-400">${label}</span><input name="${name}" value="${esc(value)}" placeholder="${esc(ph)}" maxlength="100" class="field mt-1.5" autocomplete="off" /></label>`;
+
+/* ---------------- Router ---------------- */
+function route() {
+  const [a, id] = location.hash.replace(/^#\/?/, '').split('/');
+  if (a === 'release' && studio.releases.some((r) => r.id === id)) return { screen: 'release', id };
+  if (a === 'artist' && studio.artists.some((x) => x.id === id)) return { screen: 'artist', id };
+  return { screen: 'home' };
+}
+function go(path) { const h = `#/${path}`; if (location.hash !== h) location.hash = h; else render(); }
+let lastRelId = null;
+let pendingCard = null;
 
 /* ---------------- Render ---------------- */
 const TABS = [
@@ -896,21 +1137,34 @@ const TABS = [
 ];
 
 function render() {
-  const showApp = state.created && isISO(state.releaseDate);
-  $('#landing').classList.toggle('hidden', showApp);
-  $('#app').classList.toggle('hidden', !showApp);
-  if (showApp) renderApp(); else renderLanding();
+  const rt = route();
+  const rel = rt.screen === 'release' ? studio.releases.find((r) => r.id === rt.id) : null;
+  if ((rel ? rel.id : null) !== lastRelId) { editing = null; collapsed.clear(); openPanels.clear(); weekExpanded = false; lastRelId = rel ? rel.id : null; }
+  state = rel;
+  const showPlan = !!rel && rel.created && isISO(rel.releaseDate);
+  $('#studio').classList.toggle('hidden', !!rel);
+  $('#landing').classList.toggle('hidden', !rel || showPlan);
+  $('#app').classList.toggle('hidden', !showPlan);
+  if (!rel) { if (rt.screen === 'artist') renderArtist(rt.id); else renderHome(); }
+  else if (showPlan) renderApp();
+  else renderLanding();
 }
 
 function scheduleSummary() {
-  return `${plural(state.numSingles, 'single')}, ${state.weeksBetween} weeks apart · video ${state.videoLeadDays} days before submission · submit ${state.leadDays} days before release`;
+  return `${state.type === 'single' ? '' : `${plural(state.numSingles, 'single')}, ${state.weeksBetween} weeks apart · `}video ${state.videoLeadDays} days before submission · submit ${state.leadDays} days before release`;
 }
 
 function renderLanding() {
   const input = $('#landDate');
   if (document.activeElement !== input) input.value = state.releaseDate || '';
   const totalWeeks = Math.round((state.numSingles * state.weeksBetween * 7 + state.leadDays + state.videoLeadDays) / 7) + 1;
-  $('#landSubtitle').textContent = `Set your album release date — we'll calculate the entire ${totalWeeks}-week rollout backwards`;
+  const rollout = state.type === 'single' ? 'release' : `${totalWeeks}-week rollout`;
+  $('#landSubtitle').textContent = `Set your ${TL()} release date — we'll calculate the entire ${rollout} backwards`;
+  $('#landContext').textContent = `${artistName()} · ${releaseTitle()}`;
+  $('#landBack').href = `#/artist/${state.artistId}`;
+  $('#landBackName').textContent = artistName() || 'Back';
+  $('#landDateLabel').textContent = `${state.type === 'single' ? 'Release' : `Final ${T()} Release`} Date (Friday)`;
+  document.title = `${releaseTitle()} – Release Planner`;
   $('#landSettingsSummary').textContent = `${scheduleSummary()} · Customize`;
   const hint = $('#landHint');
   const btn = $('#landCreate');
@@ -942,9 +1196,14 @@ function renderLanding() {
 function renderApp() {
   const rs = buildReleases();
   const album = rs.find((r) => r.kind === 'album');
-  const artist = state.artist.trim();
-  const albumName = album.named ? album.name : '';
-  $('#hdrSub').textContent = [`${plural(state.numSingles, 'Single')} + Album Strategy`, artist, albumName].filter(Boolean).join(' · ');
+  if (state.type === 'single' && state.tab === 'tracklist') state.tab = 'timeline';
+  $('#planTitle').textContent = releaseTitle();
+  $('#hdrSub').textContent = [artistName(), state.type === 'single' ? 'Single' : `${T()} · ${plural(state.numSingles, 'single')}`].filter(Boolean).join(' · ');
+  $('#planBack').href = `#/artist/${state.artistId}`;
+  $('#planBack').title = `Back to ${artistName()}`;
+  $('#mainDateLabel').textContent = `Target ${T()} Release Date`;
+  $('#statAlbumLabel').textContent = `${T()} Release`;
+  document.title = `${releaseTitle()} – Release Planner`;
   const md = $('#mainDate');
   if (document.activeElement !== md) md.value = state.releaseDate;
   const hint = $('#mainDateHint');
@@ -953,7 +1212,7 @@ function renderApp() {
   $('#statStart').textContent = fmtMed(projectStart(rs));
   $('#statAlbum').textContent = fmtMed(album.date);
 
-  $('#tabs').innerHTML = TABS.map((t) => `<button data-action="tab" data-tab="${t.id}" role="tab" aria-selected="${state.tab === t.id}" class="shrink-0 inline-flex items-center gap-2 rounded-md px-3 sm:px-4 py-2 text-sm font-medium transition-colors ${state.tab === t.id ? 'bg-[#262626] text-white' : 'text-zinc-400 hover:text-white'}">${t.icon ? ic(t.icon, 'w-4 h-4') : ''}${t.label}</button>`).join('');
+  $('#tabs').innerHTML = TABS.filter((t) => !(t.id === 'tracklist' && state.type === 'single')).map((t) => `<button data-action="tab" data-tab="${t.id}" role="tab" aria-selected="${state.tab === t.id}" class="shrink-0 inline-flex items-center gap-2 rounded-md px-3 sm:px-4 py-2 text-sm font-medium transition-colors ${state.tab === t.id ? 'bg-[#262626] text-white' : 'text-zinc-400 hover:text-white'}">${t.icon ? ic(t.icon, 'w-4 h-4') : ''}${t.id === 'tracklist' ? `${T()} Tracklist` : t.label}</button>`).join('');
   $('#viewToggle').classList.toggle('sm:flex', state.tab === 'releases');
   $$('#viewToggle [data-view]').forEach((b) => { b.className = `p-2.5 rounded-md ${b.dataset.view === state.view ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`; });
 
@@ -968,6 +1227,11 @@ function renderApp() {
   else v.innerHTML = viewSocial(rs);
 
   if (editing) { const el = $('#name-edit'); if (el) { el.focus(); el.select(); } }
+  if (pendingCard) { const id = pendingCard; pendingCard = null; requestAnimationFrame(() => flashCard(id)); }
+}
+function flashCard(id) {
+  const card = document.getElementById(`rel-${id}`);
+  if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); card.classList.add('flash'); setTimeout(() => card.classList.remove('flash'), 2100); }
 }
 
 /* ---------------- Toast ---------------- */
@@ -976,8 +1240,11 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.re
 
 /* ---------------- Settings modal ---------------- */
 function openSettings() {
-  $('#setArtist').value = state.artist;
+  $('#setArtist').value = artistName();
   $('#setAlbum').value = state.names.album || '';
+  $('#setType').value = state.type;
+  $('#setAlbumLabel').textContent = `${T()} title`;
+  $('#setSingles').disabled = state.type === 'single';
   $('#setSingles').value = state.numSingles;
   $('#setWeeks').value = state.weeksBetween;
   $('#setLead').value = state.leadDays;
@@ -997,21 +1264,49 @@ function download(name, content, type) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 function exportJSON() {
-  state.lastBackup = new Date().toISOString(); state.backupSnooze = ''; save();
-  if (state.created) renderApp();
-  download(`${slug(state.names.album || state.artist)}-backup-${toISO(today())}.json`, JSON.stringify({ app: 'music-release-strategy-planner', exportedAt: new Date().toISOString(), ...state }, null, 2), 'application/json');
-  toast('Backup downloaded');
+  studio.lastBackup = new Date().toISOString(); studio.backupSnooze = ''; save(); render();
+  download(`dragoncave-release-planner-backup-${toISO(today())}.json`, JSON.stringify({ app: 'music-release-strategy-planner', kind: 'studio', exportedAt: new Date().toISOString(), ...studio }, null, 2), 'application/json');
+  toast('Backup downloaded (all artists)');
+}
+function exportArtist(id) {
+  const a = studio.artists.find((x) => x.id === id);
+  if (!a) return;
+  const releases = studio.releases.filter((r) => r.artistId === id);
+  download(`${slug(a.name)}-release-plans-${toISO(today())}.json`, JSON.stringify({ app: 'music-release-strategy-planner', kind: 'artist', exportedAt: new Date().toISOString(), artist: a, releases }, null, 2), 'application/json');
+  toast(`${a.name} exported`);
+}
+function importData(data) {
+  if (!data || typeof data !== 'object') throw new Error('This file is not a release planner backup.');
+  if (Array.isArray(data.artists)) {
+    if (!confirm('Replace everything in this browser with this studio backup?')) return;
+    studio = normalizeStudio(data); save(); go(''); toast('Studio backup imported'); return;
+  }
+  if (data.kind === 'artist' && data.artist && Array.isArray(data.releases)) {
+    const a = { id: String(data.artist.id || uid()), name: String(data.artist.name || '').trim().slice(0, 100) || 'Imported artist' };
+    const existing = studio.artists.find((x) => x.id === a.id);
+    if (existing) {
+      if (!confirm(`Replace ${existing.name}'s releases with the ones in this file?`)) return;
+      studio.releases = studio.releases.filter((r) => r.artistId !== a.id);
+      existing.name = a.name;
+    } else studio.artists.push(a);
+    const ids = new Set(studio.releases.map((r) => r.id));
+    data.releases.forEach((raw) => { const r = normalize(raw); r.artistId = a.id; if (!r.id || ids.has(r.id)) r.id = uid(); ids.add(r.id); studio.releases.push(r); });
+    save(); go(`artist/${a.id}`); toast(`${a.name} imported`); return;
+  }
+  if ('releaseDate' in data) {   // backup made with the earlier single-plan version
+    const name = String(data.artist || '').trim() || 'My Artist';
+    let a = studio.artists.find((x) => x.name.toLowerCase() === name.toLowerCase());
+    if (!a) { a = { id: uid(), name }; studio.artists.push(a); }
+    const r = normalize(data); r.id = uid(); r.artistId = a.id; r.type = 'album'; if (r.releaseDate) r.created = true;
+    studio.releases.push(r); save(); go(`release/${r.id}`); toast('Plan imported'); return;
+  }
+  throw new Error('This file is not a release planner backup.');
 }
 function importJSON(file) {
   const fr = new FileReader();
   fr.onload = () => {
     try {
-      const data = JSON.parse(fr.result);
-      if (!data || typeof data !== 'object' || !('releaseDate' in data)) throw new Error('This file is not a release plan backup.');
-      if (!confirm('Replace your current plan with this backup?')) return;
-      state = normalize(data);
-      if (state.releaseDate) state.created = true;
-      editing = null; save(); render(); toast('Backup imported');
+      importData(JSON.parse(fr.result));
     } catch (e) { alert(`Import failed: ${e.message || 'invalid JSON'}`); }
   };
   fr.readAsText(file);
@@ -1021,7 +1316,7 @@ function exportICS() {
   const e = (s) => String(s).replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\n/g, '\\n');
   const d8 = (d) => toISO(d).replace(/-/g, '');
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
-  const who = state.artist.trim() ? `${state.artist.trim()} – ` : '';
+  const who = artistName() ? `${artistName()} – ` : '';
   const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Music Release Strategy Planner//EN', 'CALSCALE:GREGORIAN'];
   const ev = (id, d, s) => L.push('BEGIN:VEVENT', `UID:${id}-${d8(d)}@release-planner`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d8(d)}`, `DTEND;VALUE=DATE:${d8(addDays(d, 1))}`, `SUMMARY:${e(s)}`, 'END:VEVENT');
   rs.forEach((r) => {
@@ -1048,8 +1343,8 @@ function copyText(text, label) {
 function detailsText(r) {
   const d = state.details[r.id] || {};
   const lines = [`Title: ${r.name}`];
-  if (state.artist.trim()) lines.push(`Artist: ${state.artist.trim()}`);
-  lines.push(`Type: ${r.kind === 'album' ? 'Album' : 'Single'}`, `Release date: ${fmtMed(r.date)}`);
+  if (artistName()) lines.push(`Artist: ${artistName()}`);
+  lines.push(`Type: ${r.kind === 'album' ? T() : 'Single'}`, `Release date: ${fmtMed(r.date)}`);
   DETAIL_FIELDS.forEach((f) => { if ((d[f.k] || '').trim()) lines.push(`${f.label}: ${d[f.k].trim()}`); });
   lines.push(`Explicit: ${d.explicit ? 'Yes' : 'No'}`);
   return lines.join('\n');
@@ -1064,7 +1359,7 @@ function buildPrint() {
     <td>${fmtDay(r.videoDue)}${tick(r.videoReady)}</td><td>${fmtDay(r.deadline)}${tick(r.submitted)}</td>
     <td>${fmtDay(r.pitchDue)}${tick(r.pitched)}</td><td>${fmtDay(r.date)}</td><td>${r.audioDone}/${AUDIO_TASKS.length} · ${r.videoDone}/${VIDEO_TASKS.length}</td><td>${esc(r.status.label)}</td></tr>`).join('');
   const { tot, counted } = totalDuration();
-  const tracks = state.tracks.length ? `<h2>Album Tracklist</h2><table><thead><tr><th style="width:36px">#</th><th>Title</th><th style="width:80px">Time</th></tr></thead><tbody>
+  const tracks = state.tracks.length ? `<h2>${T()} Tracklist</h2><table><thead><tr><th style="width:36px">#</th><th>Title</th><th style="width:80px">Time</th></tr></thead><tbody>
     ${state.tracks.map((t, i) => `<tr><td>${i + 1}</td><td>${esc(t.title || '—')}</td><td>${esc(tidyDur(t.duration) || '—')}</td></tr>`).join('')}
     <tr><td></td><td><b>Total running time</b></td><td><b>${counted ? fmtDur(tot) : '—'}</b></td></tr></tbody></table>` : '';
   const kv = (pairs) => `<div class="kv">${pairs.map(([k, v]) => `<div>${esc(k)}</div><div>${esc(v)}</div>`).join('')}</div>`;
@@ -1081,10 +1376,10 @@ function buildPrint() {
     if ((d.notes || '').trim()) pairs.push(['Notes', d.notes.trim()]);
     return pairs.length ? `<div class="block"><h3>${esc(r.name)}</h3>${kv(pairs)}</div>` : '';
   }).join('');
-  const title = album.named ? album.name : 'Album Release Plan';
+  const title = releaseTitle();
   return `<div class="pa-head"><img src="${LOGO}" alt="">
       <div><div class="m" style="letter-spacing:.25em;text-transform:uppercase;color:#b8962a;font-weight:700">DragonCave Studios</div>
-      <h1>${esc(title)}</h1><div>${state.artist.trim() ? `${esc(state.artist.trim())} · ` : ''}Album release ${fmtFull(album.date)}</div></div>
+      <h1>${esc(title)}</h1><div>${artistName() ? `${esc(artistName())} · ` : ''}${T()} release ${fmtFull(album.date)}</div></div>
       <div class="m" style="margin-left:auto;text-align:right">Release plan<br>Printed ${fmtMed(today())}</div></div>
     <h2>Release Schedule</h2>
     <p class="m">Video ${state.videoLeadDays} days before submission (artwork comes from it) · submit ${state.leadDays} days before release · pitch ${state.pitchDays} days before release. ✓ = done.</p>
@@ -1115,9 +1410,11 @@ document.addEventListener('click', (ev) => {
     case 'view': state.view = el.dataset.view; save(); renderApp(); break;
     case 'edit-name': editing = el.dataset.id; renderApp(); break;
     case 'goto-release': {
-      state.tab = 'releases'; state.view = 'grid'; save(); renderApp();
-      const card = document.getElementById(`rel-${el.dataset.id}`);
-      if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); card.classList.add('flash'); setTimeout(() => card.classList.remove('flash'), 2100); }
+      const rel = el.dataset.rel ? studio.releases.find((r) => r.id === el.dataset.rel) : state;
+      if (!rel) break;
+      rel.tab = 'releases'; rel.view = 'grid'; save();
+      if (rel !== state) { pendingCard = el.dataset.id; go(`release/${rel.id}`); break; }
+      renderApp(); flashCard(el.dataset.id);
       break;
     }
     case 'add-track':
@@ -1151,12 +1448,23 @@ document.addEventListener('click', (ev) => {
     case 'snap': state.releaseDate = el.dataset.date; $('#landDate').value = state.releaseDate; save(); renderLanding(); break;
     case 'create':
       if (!isISO(state.releaseDate) || parseISO(state.releaseDate).getDay() !== 5) break;
-      state.created = true; state.createdAt = new Date().toISOString(); state.tab = 'timeline'; save(); render(); window.scrollTo({ top: 0 }); toast('Release schedule created'); break;
+      state.created = true; state.tab = 'timeline'; save(); render(); window.scrollTo({ top: 0 }); toast('Release schedule created'); break;
     case 'export': exportJSON(); break;
     case 'import': $('#importFile').click(); break;
     case 'reset':
-      if (!confirm('Reset everything? All dates, track names, checklists and tracklist will be cleared. Use Backup first if you want to keep them.')) break;
-      state = defaults(); editing = null; collapsed.clear(); openPanels.clear(); save(); render(); toast('Planner reset'); break;
+      if (!state) {
+        if (!confirm('Reset EVERYTHING? All artists and releases will be deleted from this browser. Use Backup first if you want to keep them.')) break;
+        studio = emptyStudio(); save(); go(''); toast('Planner reset'); break;
+      }
+      if (!confirm(`Reset "${releaseTitle()}"? Its dates, checklists, details and tracklist will be cleared.`)) break;
+      {
+        const fresh = normalize({ id: state.id, artistId: state.artistId, type: state.type });
+        fresh.numSingles = state.type === 'single' ? 0 : RELEASE_TYPES[state.type].singles;
+        if (state.names.album) fresh.names.album = state.names.album;
+        Object.keys(state).forEach((k) => delete state[k]);
+        Object.assign(state, fresh);
+      }
+      editing = null; collapsed.clear(); openPanels.clear(); save(); render(); window.scrollTo({ top: 0 }); toast('Plan reset'); break;
     case 'ics': exportICS(); break;
     case 'print': $('#printArea').innerHTML = buildPrint(); setTimeout(() => window.print(), 50); break;
     case 'shift': case 'shift-reset': {
@@ -1181,13 +1489,68 @@ document.addEventListener('click', (ev) => {
     }
     case 'copy-all': { const r = buildReleases().find((x) => x.id === el.dataset.id); if (r) copyText(detailsText(r), 'Track details'); break; }
     case 'quick-done': {
+      const rel = el.dataset.rel ? studio.releases.find((r) => r.id === el.dataset.rel) : state;
+      if (!rel) break;
       const id = el.dataset.id, key = el.dataset.key;
-      (state.checks[id] = state.checks[id] || {})[key] = true; save(); renderApp();
-      const r = buildReleases().find((x) => x.id === id);
+      (rel.checks[id] = rel.checks[id] || {})[key] = true; save(); render();
+      const r = withRelease(rel, () => buildReleases().find((x) => x.id === id));
       toast(`${key === 'pitched' ? 'Pitch' : 'Submission'} marked done for ${r ? r.name : 'release'}`); break;
     }
-    case 'week-more': weekExpanded = !weekExpanded; renderApp(); break;
-    case 'snooze-backup': state.backupSnooze = toISO(addDays(today(), 7)); save(); renderApp(); break;
+    case 'week-more': weekExpanded = !weekExpanded; render(); break;
+    case 'snooze-backup': studio.backupSnooze = toISO(addDays(today(), 7)); save(); render(); break;
+    case 'export-artist': exportArtist(el.dataset.id); break;
+    case 'dialog-cancel': closeDialog(); break;
+    case 'add-artist':
+      openDialog('Add artist', nameField('Artist name', 'artistName', '', 'e.g. Nova Lane'), 'Add artist', (f) => {
+        const name = f.artistName.value.trim();
+        if (!name) { f.artistName.focus(); return false; }
+        const a = { id: uid(), name: name.slice(0, 100) };
+        studio.artists.push(a); save(); go(`artist/${a.id}`); return true;
+      });
+      break;
+    case 'rename-artist': {
+      const a = studio.artists.find((x) => x.id === el.dataset.id);
+      if (!a) break;
+      openDialog('Rename artist', nameField('Artist name', 'artistName', a.name, ''), 'Save', (f) => {
+        const name = f.artistName.value.trim();
+        if (!name) { f.artistName.focus(); return false; }
+        a.name = name.slice(0, 100); save(); render(); return true;
+      });
+      break;
+    }
+    case 'delete-artist': {
+      const a = studio.artists.find((x) => x.id === el.dataset.id);
+      if (!a) break;
+      const n = studio.releases.filter((r) => r.artistId === a.id).length;
+      if (!confirm(`Delete ${a.name}${n ? ` and their ${plural(n, 'release')}` : ''}? This can't be undone. Use Export first if you want a copy.`)) break;
+      studio.artists = studio.artists.filter((x) => x.id !== a.id);
+      studio.releases = studio.releases.filter((r) => r.artistId !== a.id);
+      save(); go(''); toast(`${a.name} deleted`); break;
+    }
+    case 'new-release': {
+      const a = studio.artists.find((x) => x.id === el.dataset.id);
+      if (!a) break;
+      const types = Object.entries(RELEASE_TYPES).map(([k, v], i) => `<label class="cursor-pointer">
+          <input type="radio" name="relType" value="${k}" class="peer sr-only" ${i === 0 ? 'checked' : ''}>
+          <span class="block h-full rounded-lg border border-zinc-700 bg-[#1a1a1a] px-2 py-2.5 text-center peer-checked:border-red-500 peer-checked:bg-red-600/15 peer-focus-visible:ring-2 peer-focus-visible:ring-gold-400">
+            <span class="block text-sm font-semibold text-white">${v.label}</span><span class="block text-[11px] leading-tight text-zinc-500">${v.hint}</span></span></label>`).join('');
+      openDialog(`New release for ${a.name}`, `<div><span class="text-xs font-semibold text-zinc-400">Release type</span><div class="mt-1.5 grid grid-cols-3 gap-2">${types}</div></div>
+        ${nameField('Title (you can change it later)', 'relTitle', '', 'e.g. Midnight Frequencies')}`, 'Create release', (f) => {
+        const type = f.relType.value || 'album';
+        const rel = normalize({ id: uid(), artistId: a.id, type });
+        rel.numSingles = RELEASE_TYPES[type].singles;
+        const title = f.relTitle.value.trim();
+        if (title) rel.names.album = title.slice(0, 100);
+        studio.releases.push(rel); save(); go(`release/${rel.id}`); return true;
+      });
+      break;
+    }
+    case 'delete-release': {
+      const rel = studio.releases.find((r) => r.id === el.dataset.id);
+      if (!rel) break;
+      if (!confirm(`Delete "${releaseTitle(rel)}"? Its whole plan will be removed. This can't be undone.`)) break;
+      studio.releases = studio.releases.filter((r) => r !== rel); save(); render(); toast('Release deleted'); break;
+    }
   }
 });
 
@@ -1215,7 +1578,8 @@ document.addEventListener('keydown', (ev) => {
   if (t.matches && t.matches('[data-name-edit]')) {
     if (ev.key === 'Enter') { ev.preventDefault(); commitName(t.dataset.nameEdit, t.value); }
     else if (ev.key === 'Escape') { ev.preventDefault(); commitName(t.dataset.nameEdit, t.value, true); }
-  } else if (ev.key === 'Escape' && !$('#settings').classList.contains('hidden')) closeSettings();
+  } else if (ev.key === 'Escape' && !$('#dialog').classList.contains('hidden')) closeDialog();
+  else if (ev.key === 'Escape' && !$('#settings').classList.contains('hidden')) closeSettings();
 });
 document.addEventListener('focusout', (ev) => {
   const t = ev.target;
@@ -1271,7 +1635,15 @@ bindNum('#setLead', 'leadDays', 0, 60);
 bindNum('#setVideo', 'videoLeadDays', 0, 30);
 bindNum('#setPitch', 'pitchDays', 0, 30);
 ['#setSingles', '#setWeeks', '#setLead', '#setVideo', '#setPitch'].forEach((s, i) => $(s).addEventListener('blur', (e) => { e.target.value = state[['numSingles', 'weeksBetween', 'leadDays', 'videoLeadDays', 'pitchDays'][i]]; }));
-$('#setArtist').addEventListener('input', (e) => { state.artist = e.target.value; save(); render(); });
+$('#setArtist').addEventListener('input', (e) => { const a = artistOf(); if (a && e.target.value.trim()) { a.name = e.target.value.trim(); save(); render(); } });
+$('#setType').addEventListener('change', (e) => {
+  state.type = e.target.value;
+  if (state.type === 'single') state.numSingles = 0;
+  else if (!state.numSingles) state.numSingles = RELEASE_TYPES[state.type].singles;
+  $('#setSingles').value = state.numSingles; $('#setSingles').disabled = state.type === 'single';
+  $('#setAlbumLabel').textContent = `${T()} title`;
+  save(); render();
+});
 $('#setAlbum').addEventListener('input', (e) => { const v = e.target.value.trim(); if (v) state.names.album = e.target.value; else delete state.names.album; save(); render(); });
 
 $('#importFile').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) importJSON(f); e.target.value = ''; });
@@ -1279,8 +1651,10 @@ $('#importFile').addEventListener('change', (e) => { const f = e.target.files[0]
 let lastDay = toISO(today());
 setInterval(() => { const d = toISO(today()); if (d !== lastDay) { lastDay = d; render(); } }, 60000);
 let lastNarrow = window.matchMedia('(max-width: 639px)').matches;
-window.addEventListener('resize', () => { const n = window.matchMedia('(max-width: 639px)').matches; if (n !== lastNarrow) { lastNarrow = n; if (state.created) renderApp(); } });
-window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) { state = load(); render(); } });
+window.addEventListener('resize', () => { const n = window.matchMedia('(max-width: 639px)').matches; if (n !== lastNarrow) { lastNarrow = n; if (state && state.created) renderApp(); } });
+window.addEventListener('storage', (e) => { if (e.key === STUDIO_KEY) { studio = loadStudio(); lastRelId = null; render(); } });
+window.addEventListener('hashchange', () => { closeSettings(); closeDialog(); render(); window.scrollTo({ top: 0 }); });
+$('#dialogForm').addEventListener('submit', (e) => { e.preventDefault(); if (dialogOk && dialogOk(e.target.elements) !== false) closeDialog(); });
 
 const LOGO = 'data:image/png;base64,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';
 $$('img[data-logo]').forEach((im) => { im.src = LOGO; });
