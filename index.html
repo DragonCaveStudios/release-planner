@@ -48,6 +48,8 @@
   #printArea .kv div:nth-child(odd) { color: #666; }
   #printArea .block { break-inside: avoid; }
   #printArea .warn { color: #c2410c; font-size: 8.5pt; }
+  #printArea td.d { white-space: nowrap; }
+  #printArea .tag { display: inline-block; margin-left: 8px; padding: 0 6px; border: 1px solid #d4af37; border-radius: 4px; color: #8f7420; font-size: 8pt; font-weight: 600; }
 </style>
 </head>
 <body class="bg-black text-zinc-200 antialiased min-h-screen">
@@ -384,13 +386,13 @@ const toISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDat
 const addDays = (d, n) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; };
 const today = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
 const diffDays = (a, b) => Math.round((Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) / 864e5);
-const fmtShort = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-const fmtMed = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-const fmtDay = (d) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
-const fmtFull = (d) => d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-const fmtLong = (d) => d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+const fmtShort = (d) => d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+const fmtMed = (d) => d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric' });
+const fmtDay = (d) => d.toLocaleDateString('en-GB', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+const fmtFull = (d) => d.toLocaleDateString('en-GB', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+const fmtLong = (d) => d.toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 const plural = (n, w) => `${n} ${w}${Math.abs(n) === 1 ? '' : 's'}`;
-const weekday = (d) => d.toLocaleDateString('en-US', { weekday: 'long' });
+const weekday = (d) => d.toLocaleDateString('en-GB', { weekday: 'long' });
 
 /* ---------------- State ---------------- */
 function normalize(raw) {
@@ -839,14 +841,14 @@ function viewTracklist(rs) {
   const singles = rs.filter((r) => r.kind === 'single');
   const titles = new Set(state.tracks.map((t) => t.title.trim().toLowerCase()).filter(Boolean));
   const missing = singles.filter((s) => s.named && !titles.has(s.name.toLowerCase()));
-  const singleNames = new Set(singles.filter((s) => s.named).map((s) => s.name.toLowerCase()));
+  const sm = singleMap(rs);
   const { tot, counted } = totalDuration();
   const rows = state.tracks.map((t, i) => {
-    const isSingle = singleNames.has(t.title.trim().toLowerCase());
+    const sLabel = sm.get(t.title.trim().toLowerCase());
     return `<li class="flex items-center gap-2 sm:gap-3 rounded-lg bg-[#161616] border border-zinc-800 px-2.5 sm:px-3 py-2">
       <span class="w-6 text-center text-sm font-semibold text-zinc-500 tabular-nums">${i + 1}</span>
       <input data-track="${i}" data-field="title" value="${esc(t.title)}" placeholder="Track title" maxlength="100" class="min-w-0 flex-1 bg-transparent border-b border-transparent focus:border-gold-500 outline-none py-1 text-sm text-white placeholder:text-zinc-600" />
-      <span data-single-badge="${i}" class="${isSingle ? '' : 'hidden'}">${pill('Single', 'green')}</span>
+      <span data-single-badge="${i}" class="${sLabel ? '' : 'hidden'}">${pill(sLabel || 'Single', 'green')}</span>
       <input data-track="${i}" data-field="duration" value="${esc(t.duration)}" placeholder="3:30" maxlength="6" title="Type digits, e.g. 345 for 3:45" inputmode="numeric" class="w-14 bg-[#1f1f1f] rounded-md border border-zinc-800 focus:border-gold-500 outline-none px-2 py-1 text-sm text-center text-zinc-200 placeholder:text-zinc-600 tabular-nums" />
       <div class="flex">
         <button data-action="track-move" data-i="${i}" data-dir="-1" ${i === 0 ? 'disabled' : ''} class="p-1.5 rounded text-zinc-500 hover:text-white hover:bg-zinc-800 disabled:opacity-25 disabled:hover:bg-transparent" title="Move up">${ic('arrowUp', 'w-3.5 h-3.5')}</button>
@@ -869,7 +871,7 @@ function viewTracklist(rs) {
     <div class="mt-2 flex items-center justify-between gap-3 rounded-lg border border-gold-500/40 bg-gold-500/[.06] pl-4 pr-3 py-3">
       <span class="flex items-center gap-2 text-sm font-semibold text-gold-300">${ic('clock', 'w-4 h-4')}Total Running Time</span>
       <span class="text-right"><span id="totalRun" class="block text-xl font-bold text-white tabular-nums"></span><span id="totalRunNote" class="block text-[11px] text-zinc-500"></span></span>
-    </div><p class="mt-3 text-xs text-zinc-600">Type times as digits, e.g. 345 → 3:45 (the colon is added for you). Tracks whose title matches a named single get a Single tag.</p>` : `
+    </div><p class="mt-3 text-xs text-zinc-600">Type times as digits, e.g. 345 → 3:45 (the colon is added for you). Tracks whose title matches a named single are tagged with its number.</p>` : `
     <div class="mt-3 rounded-xl border border-dashed border-zinc-700 py-10 text-center">
       <span class="inline-block text-zinc-600">${ic('music', 'w-8 h-8')}</span>
       <p class="mt-2 text-sm text-zinc-400">No tracks added yet</p>
@@ -1350,17 +1352,27 @@ function detailsText(r) {
   return lines.join('\n');
 }
 
+function singleMap(rs) {
+  return new Map(rs.filter((r) => r.kind === 'single' && r.named).map((r) => [r.name.toLowerCase(), r.label]));
+}
+
 function buildPrint() {
   const rs = buildReleases();
   const album = rs.find((r) => r.kind === 'album');
   const tick = (b) => (b ? ' ✓' : '');
+  const yr = album.date.getFullYear();
+  // All releases are Fridays and the year is in the header, so keep dates short; add the year only when it differs
+  const pd = (d) => `${d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}${d.getFullYear() !== yr ? ` ’${String(d.getFullYear()).slice(2)}` : ''}`;
+  const prog = (done, total) => (done === total ? '<b>✓ Done</b>' : `${done}/${total}`);
   const rows = rs.map((r) => `<tr>
     <td><b>${esc(r.name)}</b>${r.named ? `<br><span class="m">${esc(r.label)}</span>` : ''}${r.warn ? `<br><span class="warn">${esc(r.warn)}</span>` : ''}</td>
-    <td>${fmtDay(r.videoDue)}${tick(r.videoReady)}</td><td>${fmtDay(r.deadline)}${tick(r.submitted)}</td>
-    <td>${fmtDay(r.pitchDue)}${tick(r.pitched)}</td><td>${fmtDay(r.date)}</td><td>${r.audioDone}/${AUDIO_TASKS.length} · ${r.videoDone}/${VIDEO_TASKS.length}</td><td>${esc(r.status.label)}</td></tr>`).join('');
+    <td class="d">${pd(r.videoDue)}${tick(r.videoReady)}</td><td class="d">${pd(r.deadline)}${tick(r.submitted)}</td>
+    <td class="d">${pd(r.pitchDue)}${tick(r.pitched)}</td><td class="d"><b>${pd(r.date)}</b></td>
+    <td class="d">${prog(r.audioDone, AUDIO_TASKS.length)}</td><td class="d">${prog(r.videoDone, VIDEO_TASKS.length)}</td><td>${esc(r.status.label)}</td></tr>`).join('');
   const { tot, counted } = totalDuration();
+  const sm = singleMap(rs);
   const tracks = state.tracks.length ? `<h2>${T()} Tracklist</h2><table><thead><tr><th style="width:36px">#</th><th>Title</th><th style="width:80px">Time</th></tr></thead><tbody>
-    ${state.tracks.map((t, i) => `<tr><td>${i + 1}</td><td>${esc(t.title || '—')}</td><td>${esc(tidyDur(t.duration) || '—')}</td></tr>`).join('')}
+    ${state.tracks.map((t, i) => { const sl = sm.get(t.title.trim().toLowerCase()); return `<tr><td>${i + 1}</td><td>${esc(t.title || '—')}${sl ? `<span class="tag">${esc(sl)}</span>` : ''}</td><td>${esc(tidyDur(t.duration) || '—')}</td></tr>`; }).join('')}
     <tr><td></td><td><b>Total running time</b></td><td><b>${counted ? fmtDur(tot) : '—'}</b></td></tr></tbody></table>` : '';
   const kv = (pairs) => `<div class="kv">${pairs.map(([k, v]) => `<div>${esc(k)}</div><div>${esc(v)}</div>`).join('')}</div>`;
   const det = rs.map((r) => {
@@ -1382,8 +1394,8 @@ function buildPrint() {
       <h1>${esc(title)}</h1><div>${artistName() ? `${esc(artistName())} · ` : ''}${T()} release ${fmtFull(album.date)}</div></div>
       <div class="m" style="margin-left:auto;text-align:right">Release plan<br>Printed ${fmtMed(today())}</div></div>
     <h2>Release Schedule</h2>
-    <p class="m">Video ${state.videoLeadDays} days before submission (artwork comes from it) · submit ${state.leadDays} days before release · pitch ${state.pitchDays} days before release. ✓ = done.</p>
-    <table><thead><tr><th>Release</th><th>Video due</th><th>Submit by</th><th>Pitch by</th><th>Release date</th><th>Checklist · Video</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+    <p class="m">Video ${state.videoLeadDays} days before submission (artwork comes from it) · submit ${state.leadDays} days before release · pitch ${state.pitchDays} days before release. Assets = artwork, metadata &amp; ISRC, WAV, submitted, pitched. ✓ = done.</p>
+    <table><thead><tr><th>Track</th><th>Video due</th><th>Submit by</th><th>Pitch by</th><th>Release</th><th>Assets</th><th>Video</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
     ${tracks}
     ${det ? `<h2>Track Details</h2>${det}` : ''}
     ${res ? `<h2>Release Results</h2>${res}` : ''}`;
@@ -1612,8 +1624,9 @@ document.addEventListener('input', (ev) => {
     if (t.dataset.field === 'duration') { const f = autoColon(t.value); if (f !== t.value) t.value = f; }
     if (state.tracks[i]) { state.tracks[i][t.dataset.field] = t.value; save(); }
     if (t.dataset.field === 'title') {
-      const named = new Set(buildReleases().filter((r) => r.kind === 'single' && r.named).map((r) => r.name.toLowerCase()));
-      $(`[data-single-badge="${i}"]`)?.classList.toggle('hidden', !named.has(t.value.trim().toLowerCase()));
+      const sl = singleMap(buildReleases()).get(t.value.trim().toLowerCase());
+      const badge = $(`[data-single-badge="${i}"]`);
+      if (badge) { badge.classList.toggle('hidden', !sl); if (sl) badge.innerHTML = pill(sl, 'green'); }
     }
     refreshTrackTotals();
   }
