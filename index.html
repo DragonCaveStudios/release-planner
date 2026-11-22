@@ -1155,7 +1155,7 @@ function weekItems(rs) {
     if (!r.videoReady) items.push({ r, date: r.videoDue, d: r.dVid, icon: 'video', text: `Finish the video for ${n}`, plain: `Finish video for ${r.name}` });
     items.push({ r, date: r.date, d: r.dRel, icon: r.kind === 'album' ? 'disc' : 'music', release: true, text: r.dRel === 0 ? `${n} is out today 🎉` : `${n} releases`, plain: `${r.name} releases` });
   }
-  return items.sort((a, b) => a.date - b.date || (a.release ? 1 : -1));
+  return items.sort((a, b) => a.date - b.date || ((a.release ? 1 : 0) - (b.release ? 1 : 0)));
 }
 function viewThisWeek(rs, studioItems) {
   const all = studioItems || weekItems(rs);
@@ -1252,7 +1252,7 @@ function studioWeekItems() {
   return studio.releases.filter((r) => r.created && isISO(r.releaseDate))
     .flatMap((rel) => withRelease(rel, () => weekItems(buildReleases()).map((x) => ({ ...x, rel }))))
     .concat(studio.games.flatMap(gameWeekItems))
-    .sort((a, b) => a.date - b.date || (a.release ? 1 : -1));
+    .sort((a, b) => a.date - b.date || ((a.release ? 1 : 0) - (b.release ? 1 : 0)));
 }
 
 /* ---------------- Games: schedule ---------------- */
