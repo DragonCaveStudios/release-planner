@@ -471,7 +471,18 @@ function normalize(raw) {
 }
 const uid = () => Math.random().toString(36).slice(2, 10);
 const okTime = (x) => typeof x === 'string' && !Number.isNaN(Date.parse(x));
-function emptyStudio() { return { version: 3, artists: [], releases: [], games: [], createdAt: new Date().toISOString(), savedAt: '', lastBackup: '', backupSnooze: '' }; }
+// Next Fest editions added by the user (Settings > Next Fest dates) as Valve announces them.
+function normalizeFest(raw) {
+  const o = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+  if (!isISO(o.start) || !isISO(o.end)) return null;
+  const f = { id: typeof o.id === 'string' && /^[a-z0-9-]{1,40}$/.test(o.id) && o.id !== 'custom' ? o.id : `nf-${uid()}`,
+    label: String(o.label ?? '').trim().slice(0, 60) || parseISO(o.start).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+    start: o.start, end: o.end };
+  if (isISO(o.reg)) f.reg = o.reg;
+  if (isISO(o.review)) f.review = o.review;
+  return f;
+}
+function emptyStudio() { return { version: 3, artists: [], releases: [], games: [], fests: [], createdAt: new Date().toISOString(), savedAt: '', lastBackup: '', backupSnooze: '' }; }
 function normalizeGame(raw) {
   const o = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
   const obj = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x : {});
@@ -480,7 +491,7 @@ function normalizeGame(raw) {
     name: String(o.name ?? '').trim().slice(0, 100) || 'Untitled game',
     platforms: String(o.platforms ?? '').slice(0, 100),
     storeDate: isISO(o.storeDate) ? o.storeDate : '',
-    festId: o.festId === 'custom' || NEXT_FESTS.some((f) => f.id === o.festId) ? o.festId : '',
+    festId: typeof o.festId === 'string' && /^[a-z0-9-]{1,40}$/.test(o.festId) ? o.festId : '',
     fest: {},
     launchDate: isISO(o.launchDate) ? o.launchDate : '',
     checks: {},
@@ -509,6 +520,12 @@ function normalizeStudio(raw) {
     if (!r.id || rids.has(r.id)) r.id = uid();
     rids.add(r.id);
     st.releases.push(r);
+  }
+  const fids = new Set(NEXT_FESTS.map((f) => f.id));
+  for (const raw4 of Array.isArray(o.fests) ? o.fests : []) {
+    const f = normalizeFest(raw4);
+    if (!f || st.fests.some((x) => x.id === f.id)) continue;
+    st.fests.push(f); fids.add(f.id);
   }
   const gids = new Set();
   for (const raw3 of Array.isArray(o.games) ? o.games : []) {
@@ -1256,7 +1273,47 @@ function studioWeekItems() {
 }
 
 /* ---------------- Games: schedule ---------------- */
-const festOf = (g) => (g.festId === 'custom' ? g.fest : NEXT_FESTS.find((f) => f.id === g.festId) || {});
+// Built-in editions plus the ones added in Next Fest dates (an added edition with the same id replaces a built-in one).
+function allFests() {
+  const map = new Map(NEXT_FESTS.map((f) => [f.id, { ...f, builtIn: true }]));
+  for (const f of studio.fests || []) map.set(f.id, { ...f, builtIn: false });
+  return [...map.values()].sort((a, b) => (a.start < b.start ? -1 : 1));
+}
+const festOf = (g) => (g.festId === 'custom' ? g.fest : allFests().find((f) => f.id === g.festId) || {});
+const festRange = (f) => `${fmtShort(parseISO(f.start))} – ${fmtMed(parseISO(f.end))}`;
+function festsMenu() {
+  const t = toISO(today());
+  const list = allFests();
+  const used = (id) => studio.games.filter((g) => g.festId === id).map((g) => g.name);
+  const rows = list.map((f) => `<li class="flex items-start gap-3 rounded-lg border px-3 py-2.5 ${f.end < t ? 'border-zinc-800 bg-[#101010] opacity-60' : 'border-zinc-800 bg-[#1a1a1a]'}">
+      <span class="mt-0.5 text-red-500">${ic('party', 'w-4 h-4')}</span>
+      <span class="flex-1 min-w-0"><span class="block text-sm font-semibold text-white">${esc(f.label)}${f.end < t ? ' <span class="text-xs font-normal text-zinc-500">(finished)</span>' : ''}</span>
+        <span class="block text-xs text-zinc-400">${festRange(f)}</span>
+        <span class="block text-xs text-zinc-500">Sign-up ${f.reg ? fmtMed(parseISO(f.reg)) : 'not set'} · Review ${f.review ? fmtMed(parseISO(f.review)) : 'not set'}</span>
+        ${used(f.id).length ? `<span class="block text-xs text-gold-300/80">Used by ${esc(used(f.id).join(', '))}</span>` : ''}</span>
+      ${f.builtIn ? '<span class="text-[11px] text-zinc-500 pt-0.5">Built in</span>' : `<button type="button" data-action="fest-edit" data-id="${f.id}" class="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800" title="Edit" aria-label="Edit ${esc(f.label)}">${ic('pencil', 'w-4 h-4')}</button>
+        <button type="button" data-action="fest-del" data-id="${f.id}" class="p-1.5 rounded-md text-zinc-500 hover:text-red-400 hover:bg-red-500/10" title="Delete" aria-label="Delete ${esc(f.label)}">${ic('trash', 'w-4 h-4')}</button>`}
+    </li>`).join('');
+  openDialog('Next Fest dates', `<p class="text-sm text-zinc-300">Add each Steam Next Fest when Valve announces it, copying the dates from the Steamworks page. Every game set to that edition updates automatically.</p>
+    <ul class="space-y-2 max-h-[45vh] overflow-y-auto thin-scroll pr-1">${rows}</ul>
+    <button type="button" data-action="fest-add" class="w-full inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-500">${ic('plus')}Add a Next Fest</button>
+    <a href="https://partner.steamgames.com/doc/marketing/upcoming_events" target="_blank" rel="noopener" class="block text-center text-xs text-gold-400 hover:text-gold-300">Open Valve's upcoming events page</a>`, 'Done', () => true);
+}
+function festForm(f) {
+  const d = (label, name, v, hint) => `<label class="block"><span class="text-xs font-semibold text-zinc-400">${label}</span><input type="date" name="${name}" value="${esc(v || '')}" class="field mt-1.5" />${hint ? `<span class="block mt-1 text-[11px] text-zinc-500">${hint}</span>` : ''}</label>`;
+  openDialog(f ? `Edit ${f.label}` : 'Add a Next Fest', `${nameField('Name', 'festLabel', f ? f.label : '', 'e.g. October 2027')}
+    <div class="grid grid-cols-2 gap-3">${d('Starts', 'festStart', f && f.start)}${d('Ends', 'festEnd', f && f.end)}
+    ${d('Sign-up deadline', 'festReg', f && f.reg, 'Registration closes')}${d('Review deadline', 'festReview', f && f.review, 'Demo and store page submitted')}</div>
+    <p class="text-[11px] text-zinc-500">Leave the name blank to use the month and year it starts.</p>`, f ? 'Save' : 'Add', (form) => {
+    const v = { label: form.festLabel.value, start: form.festStart.value, end: form.festEnd.value, reg: form.festReg.value, review: form.festReview.value };
+    if (!isISO(v.start)) { form.festStart.focus(); return false; }
+    if (!isISO(v.end) || v.end < v.start) { form.festEnd.focus(); toast('The end date must be on or after the start date'); return false; }
+    const nf = normalizeFest({ ...v, id: f ? f.id : undefined });
+    if (f) studio.fests = studio.fests.map((x) => (x.id === f.id ? nf : x)); else studio.fests.push(nf);
+    save(); render(); setTimeout(festsMenu, 0); toast(f ? `${nf.label} updated` : `${nf.label} added`);
+    return true;
+  });
+}
 function gameDates(g) {
   const f = festOf(g);
   const d = (s) => (isISO(s) ? parseISO(s) : null);
@@ -1331,7 +1388,10 @@ function gamesSection() {
   return `<div class="mt-12 flex flex-wrap items-end justify-between gap-3 mb-4">
       <div><h2 class="flex items-center gap-2 text-xl font-bold text-white"><span class="text-red-500">${ic('gamepad', 'w-5 h-5')}</span>Games</h2>
       <p class="text-sm text-zinc-400">Store page, Next Fest and launch, planned in one place</p></div>
-      ${has ? `<button data-action="add-game" class="${redBtn}">${ic('plus')}Add game</button>` : ''}
+      <div class="flex flex-wrap gap-2">
+        <button data-action="fests" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium border border-gold-500/50 text-gold-400 hover:bg-gold-500/10">${ic('calendar')}Next Fest dates</button>
+        ${has ? `<button data-action="add-game" class="${redBtn}">${ic('plus')}Add game</button>` : ''}
+      </div>
     </div>
     ${has ? `<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${studio.games.map(gameCard).join('')}</div>` : `
     <div class="rounded-2xl border border-dashed border-red-600/40 bg-[#0d0d0d] px-6 py-10 text-center">
@@ -1368,11 +1428,12 @@ function renderGame(id) {
   const b = buildGame(g), f = festOf(g), D = b.D;
   const dateField = (label, field, value, hint) => `<label class="block"><span class="text-xs font-semibold text-zinc-400">${label}</span>
       <input type="date" data-gfield="${field}" value="${esc(value || '')}" class="field mt-1.5" />${hint ? `<span class="block mt-1 text-[11px] text-zinc-500">${hint}</span>` : ''}</label>`;
-  const festOpts = `<option value="">Not chosen yet</option>${NEXT_FESTS.map((x) => `<option value="${x.id}" ${g.festId === x.id ? 'selected' : ''}>${x.label} (${fmtShort(parseISO(x.start))} – ${fmtShort(parseISO(x.end))})</option>`).join('')}<option value="custom" ${g.festId === 'custom' ? 'selected' : ''}>Custom dates (a later edition)</option>`;
+  const tISO = toISO(today());
+  const festOpts = `<option value="">Not chosen yet</option>${allFests().filter((x) => x.end >= tISO || x.id === g.festId).map((x) => `<option value="${x.id}" ${g.festId === x.id ? 'selected' : ''}>${esc(x.label)} (${fmtShort(parseISO(x.start))} – ${fmtShort(parseISO(x.end))})</option>`).join('')}<option value="custom" ${g.festId === 'custom' ? 'selected' : ''}>Custom dates (not announced yet)</option>`;
   const custom = g.festId === 'custom' ? `<div class="sm:col-span-2 grid grid-cols-2 gap-3 rounded-xl border border-zinc-800 bg-[#151515] p-3">
       ${dateField('Next Fest starts', 'fest.start', g.fest.start)}${dateField('Next Fest ends', 'fest.end', g.fest.end)}
       ${dateField('Sign-up deadline', 'fest.reg', g.fest.reg)}${dateField('Review deadline', 'fest.review', g.fest.review, 'Demo and store page submitted')}
-      <p class="col-span-2 text-[11px] text-zinc-500">Copy these from Valve's Steamworks page once the edition is announced.</p></div>` : '';
+      <p class="col-span-2 text-[11px] text-zinc-500">Placeholder dates. Once Valve announces this edition, add it under <button type="button" data-action="fests" class="underline text-gold-400 hover:text-gold-300">Next Fest dates</button> and pick it above.</p></div>` : '';
   const facts = [];
   if (D.page && D.fest) facts.push(`${monthsText(diffDays(D.page, D.fest))} of wishlists before Next Fest`);
   if (D.festEnd && D.launch && D.launch > D.festEnd) facts.push(`launch ${monthsText(diffDays(D.festEnd, D.launch))} after Next Fest`);
@@ -1417,7 +1478,7 @@ function renderGame(id) {
         <label class="block sm:col-span-2"><span class="text-xs font-semibold text-zinc-400">Stores</span><input data-gtext="platforms" value="${esc(g.platforms)}" maxlength="100" placeholder="e.g. Steam, Epic, GOG" class="field mt-1.5" /></label>
         ${dateField('Store page goes live', 'storeDate', g.storeDate, 'When wishlists start')}
         <label class="block"><span class="text-xs font-semibold text-zinc-400">Steam Next Fest (demo)</span><select data-gfield="festId" class="field mt-1.5">${festOpts}</select>
-          <span class="block mt-1 text-[11px] text-zinc-500">One Next Fest per game</span></label>
+          <span class="block mt-1 text-[11px] text-zinc-500">One Next Fest per game · <button type="button" data-action="fests" class="underline text-gold-400 hover:text-gold-300">Add or edit Next Fest dates</button></span></label>
         ${custom}
         ${dateField('Launch day', 'launchDate', g.launchDate, 'About a month after Next Fest ends')}
       </div>
@@ -1894,6 +1955,17 @@ document.addEventListener('click', (ev) => {
     case 'file-reconnect': reconnectFile(); break;
     case 'file-unlink': unlinkFile(); break;
     case 'goto-game': go(`game/${el.dataset.id}`); break;
+    case 'fests': festsMenu(); break;
+    case 'fest-add': festForm(null); break;
+    case 'fest-edit': { const f = (studio.fests || []).find((x) => x.id === el.dataset.id); if (f) festForm(f); break; }
+    case 'fest-del': {
+      const f = (studio.fests || []).find((x) => x.id === el.dataset.id);
+      if (!f) break;
+      const users = studio.games.filter((g) => g.festId === f.id);
+      if (!confirm(`Delete ${f.label}?${users.length ? ` ${users.map((g) => g.name).join(', ')} will go back to "Not chosen yet".` : ''}`)) break;
+      users.forEach((g) => { g.festId = ''; });
+      studio.fests = studio.fests.filter((x) => x !== f); save(); render(); festsMenu(); break;
+    }
     case 'game-done': {
       const g = studio.games.find((x) => x.id === el.dataset.id);
       if (!g) break;
