@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Music Release Strategy Planner</title>
-<meta name="description" content="Reverse-engineer your singles and album release timeline from a target album date." />
+<title>Release Strategy Planner</title>
+<meta name="description" content="Plan music and game releases backwards from their release dates." />
 <meta name="theme-color" content="#000000" />
 <link id="favicon" rel="icon" type="image/png" href="" />
 <script src="https://cdn.tailwindcss.com"></script>
@@ -62,10 +62,11 @@
         <img data-logo alt="DragonCave Studios" class="w-11 h-11 shrink-0 rounded-xl border border-gold-500/70 bg-black" />
         <span class="min-w-0">
           <span class="block text-[10px] sm:text-[11px] font-bold tracking-[.15em] sm:tracking-[.3em] uppercase text-gold-400 truncate">DragonCave Studios</span>
-          <span class="block font-bold text-white text-base sm:text-xl leading-tight truncate">Music Release Strategy Planner</span>
+          <span class="block font-bold text-white text-base sm:text-xl leading-tight truncate">Release Strategy Planner</span>
         </span>
       </a>
       <div class="flex items-center gap-1.5 sm:gap-2">
+        <span data-filebadge></span>
         <button data-action="import" title="Import a backup" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="upload" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Import</span></button>
         <button data-action="export" title="Back up everything" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="download" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Backup</span></button>
         <button data-action="reset" title="Reset everything" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="refresh" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Reset</span></button>
@@ -119,6 +120,7 @@
         <p id="hdrSub" class="text-xs sm:text-sm text-zinc-500 truncate"></p>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
+        <span data-filebadge></span>
         <button data-action="export" title="Backup (export JSON)" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="download" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Backup</span></button>
         <button data-action="reset" title="Reset" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="refresh" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Reset</span></button>
         <button data-action="print" title="Print or save as PDF" class="inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium bg-black text-gold-400 hover:bg-gold-500/10 border border-gold-500/50"><span data-icon="printer" data-icon-class="w-4 h-4"></span><span class="hidden md:inline">Print</span></button>
@@ -162,7 +164,7 @@
       </div>
     </div>
     <div id="view" class="mt-6"></div>
-    <p class="mt-12 text-center text-xs text-zinc-600">A DragonCave Studios tool · All data is saved only in this browser. Use Backup to export JSON and Import to restore it on another device.</p>
+    <p class="mt-12 text-center text-xs text-zinc-600" data-footnote></p>
   </main>
 </div>
 
@@ -256,6 +258,9 @@ const I = {
   users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
   alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>',
+  gamepad: '<path d="M6 11h4M8 9v4"/><path d="M15 12h.01M18 10h.01"/><rect x="2" y="6" width="20" height="12" rx="4"/>',
+  save: '<path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
 };
 const ic = (name, cls = 'w-4 h-4') => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[name] || ''}</svg>`;
 function hydrateIcons(root = document) {
@@ -346,6 +351,38 @@ const SOCIAL = [
 ];
 const ALL_POST_IDS = SOCIAL.flatMap((s) => s.posts.map((p) => p[0]));
 
+/* ---------------- Games ---------------- */
+// Steam Next Fest editions announced by Valve (Steamworks "Upcoming events"). Later editions: choose "Custom dates".
+const NEXT_FESTS = [
+  { id: 'feb-2027', label: 'February 2027', start: '2027-02-22', end: '2027-03-01', reg: '2027-01-10', review: '2027-02-01' },
+  { id: 'jun-2027', label: 'June 2027', start: '2027-06-14', end: '2027-06-21', reg: '2027-04-25', review: '2027-05-31' },
+];
+const MILESTONES = {
+  page:   { label: 'Steam store page', icon: 'rocket' },
+  fest:   { label: 'Steam Next Fest', icon: 'party' },
+  launch: { label: 'Launch', icon: 'gamepad' },
+};
+// at: which date the task counts back from · off: days before (-) or after (+) that date · group: which section it sits in
+const GAME_TASKS = [
+  { key: 'fee',         label: 'Steam Direct fee paid',                  at: 'page',   off: -28, group: 'page',   icon: 'tag' },
+  { key: 'capsule',     label: 'Capsule art in every size',              at: 'page',   off: -21, group: 'page',   icon: 'image' },
+  { key: 'shots',       label: 'At least 5 screenshots',                 at: 'page',   off: -21, group: 'page',   icon: 'camera' },
+  { key: 'description', label: 'Store description and tags',             at: 'page',   off: -14, group: 'page',   icon: 'file' },
+  { key: 'trailer',     label: 'Trailer',                                at: 'page',   off: -14, group: 'page',   icon: 'film' },
+  { key: 'pageReview',  label: 'Store page sent to Valve for review',    at: 'page',   off: -7,  group: 'page',   icon: 'send' },
+  { key: 'pageLive',    label: 'Store page live (Coming Soon)',          at: 'page',   off: 0,   group: 'page',   icon: 'rocket' },
+  { key: 'site',        label: 'Website page and Wishlist button live',  at: 'page',   off: 0,   group: 'page',   icon: 'share' },
+  { key: 'register',    label: 'Registered for Next Fest',               at: 'reg',    off: 0,   group: 'fest',   icon: 'calendar' },
+  { key: 'demo',        label: 'Demo build finished',                    at: 'review', off: -14, group: 'fest',   icon: 'gamepad' },
+  { key: 'demoReview',  label: 'Demo and store page sent for review',    at: 'review', off: 0,   group: 'fest',   icon: 'send' },
+  { key: 'outreach',    label: 'Press and creator emails sent',          at: 'fest',   off: -14, group: 'fest',   icon: 'megaphone' },
+  { key: 'demoLive',    label: 'Demo live for Next Fest',                at: 'fest',   off: 0,   group: 'fest',   icon: 'party' },
+  { key: 'launchBuild', label: 'Launch build sent to Valve for review',  at: 'launch', off: -14, group: 'launch', icon: 'send' },
+  { key: 'discount',    label: 'Launch discount set up',                 at: 'launch', off: -14, group: 'launch', icon: 'tag' },
+  { key: 'soundtrack',  label: 'Soundtrack ready to release',            at: 'launch', off: -7,  group: 'launch', icon: 'music' },
+  { key: 'launched',    label: 'Game launched',                          at: 'launch', off: 0,   group: 'launch', icon: 'gamepad' },
+];
+
 const defaults = () => ({
   version: 3,
   id: '',
@@ -434,7 +471,26 @@ function normalize(raw) {
 }
 const uid = () => Math.random().toString(36).slice(2, 10);
 const okTime = (x) => typeof x === 'string' && !Number.isNaN(Date.parse(x));
-function emptyStudio() { return { version: 3, artists: [], releases: [], createdAt: new Date().toISOString(), lastBackup: '', backupSnooze: '' }; }
+function emptyStudio() { return { version: 3, artists: [], releases: [], games: [], createdAt: new Date().toISOString(), savedAt: '', lastBackup: '', backupSnooze: '' }; }
+function normalizeGame(raw) {
+  const o = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+  const obj = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x : {});
+  const g = {
+    id: typeof o.id === 'string' && o.id ? o.id : uid(),
+    name: String(o.name ?? '').trim().slice(0, 100) || 'Untitled game',
+    platforms: String(o.platforms ?? '').slice(0, 100),
+    storeDate: isISO(o.storeDate) ? o.storeDate : '',
+    festId: o.festId === 'custom' || NEXT_FESTS.some((f) => f.id === o.festId) ? o.festId : '',
+    fest: {},
+    launchDate: isISO(o.launchDate) ? o.launchDate : '',
+    checks: {},
+    notes: typeof o.notes === 'string' ? o.notes.slice(0, 5000) : '',
+  };
+  for (const k of ['start', 'end', 'reg', 'review']) if (isISO(obj(o.fest)[k])) g.fest[k] = o.fest[k];
+  const valid = new Set(GAME_TASKS.map((t) => t.key));
+  for (const k of Object.keys(obj(o.checks))) if (valid.has(k) && o.checks[k]) g.checks[k] = true;
+  return g;
+}
 function normalizeStudio(raw) {
   const o = raw && typeof raw === 'object' ? raw : {};
   const st = emptyStudio();
@@ -454,7 +510,15 @@ function normalizeStudio(raw) {
     rids.add(r.id);
     st.releases.push(r);
   }
+  const gids = new Set();
+  for (const raw3 of Array.isArray(o.games) ? o.games : []) {
+    const g = normalizeGame(raw3);
+    if (gids.has(g.id)) g.id = uid();
+    gids.add(g.id);
+    st.games.push(g);
+  }
   if (okTime(o.createdAt)) st.createdAt = o.createdAt;
+  st.savedAt = okTime(o.savedAt) ? o.savedAt : '';
   st.lastBackup = okTime(o.lastBackup) ? o.lastBackup : '';
   st.backupSnooze = isISO(o.backupSnooze) ? o.backupSnooze : '';
   return st;
@@ -483,8 +547,164 @@ function loadStudio() {
 }
 let studio = loadStudio();
 let state = null;   // the release currently open in the planner (an object inside studio.releases)
-function save() { try { localStorage.setItem(STUDIO_KEY, JSON.stringify(studio)); } catch { toast('Could not save: browser storage unavailable'); } }
-save();
+function saveLocal() { try { localStorage.setItem(STUDIO_KEY, JSON.stringify(studio)); } catch { toast('Could not save: browser storage unavailable'); } }
+// Every change goes to this browser and, when a save file is linked, to that file too.
+function save() { studio.savedAt = new Date().toISOString(); saveLocal(); queueFileWrite(); }
+saveLocal();
+
+/* ---------------- Save file on this computer (File System Access API) ---------------- */
+// Chrome and Edge on desktop can keep writing to one file the user picks. The file handle is kept in
+// IndexedDB so the link survives restarts; Chrome may ask once to reconnect after the browser restarts.
+const FS_OK = typeof window.showSaveFilePicker === 'function' && typeof window.showOpenFilePicker === 'function' && 'indexedDB' in window;
+const FILE_TYPES = [{ description: 'Planner save file', accept: { 'application/json': ['.json'] } }];
+let fileHandle = null;
+let fileStatus = 'none';   // none | ok | reconnect | error
+let fileSavedAt = 0;
+let fileTimer = null;
+function idbOpen() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('releasePlannerFiles', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('handles');
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function idbSetHandle(h) {
+  const db = await idbOpen();
+  await new Promise((res, rej) => {
+    const tx = db.transaction('handles', 'readwrite');
+    if (h) tx.objectStore('handles').put(h, 'save'); else tx.objectStore('handles').delete('save');
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+async function idbGetHandle() {
+  const db = await idbOpen();
+  return new Promise((res, rej) => {
+    const q = db.transaction('handles', 'readonly').objectStore('handles').get('save');
+    q.onsuccess = () => res(q.result || null); q.onerror = () => rej(q.error);
+  });
+}
+const studioFileText = () => JSON.stringify({ app: 'release-strategy-planner', kind: 'studio', ...studio }, null, 2);
+async function writeFile() {
+  if (!fileHandle || fileStatus !== 'ok') return;
+  try {
+    const w = await fileHandle.createWritable();
+    await w.write(studioFileText());
+    await w.close();
+    fileSavedAt = Date.now();
+  } catch (e) {
+    let p = 'denied';
+    try { p = await fileHandle.queryPermission({ mode: 'readwrite' }); } catch { /* handle gone */ }
+    fileStatus = p === 'granted' ? 'error' : 'reconnect';
+    render();
+  }
+  updateFileBadge();
+}
+function queueFileWrite() {
+  if (!fileHandle || fileStatus !== 'ok') return;
+  clearTimeout(fileTimer);
+  fileTimer = setTimeout(writeFile, 500);
+}
+async function readFileData() {
+  const txt = await (await fileHandle.getFile()).text();
+  if (!txt.trim()) return null;
+  const data = JSON.parse(txt);
+  return data && Array.isArray(data.artists) ? data : null;
+}
+// Keep whichever copy (this browser or the file) was changed most recently.
+async function syncWithFile() {
+  let data = null;
+  try { data = await readFileData(); } catch { data = null; }
+  const fileT = data ? Date.parse(data.savedAt || '') || 0 : 0;
+  const localT = Date.parse(studio.savedAt || '') || 0;
+  if (data && fileT > localT) { studio = normalizeStudio(data); saveLocal(); lastRelId = null; fileSavedAt = Date.now(); }
+  else await writeFile();
+}
+async function initFile() {
+  if (!FS_OK) { updateFileBadge(); return; }
+  try {
+    const h = await idbGetHandle();
+    if (h) {
+      fileHandle = h;
+      const p = await h.queryPermission({ mode: 'readwrite' });
+      if (p === 'granted') { fileStatus = 'ok'; await syncWithFile(); } else fileStatus = 'reconnect';
+    }
+  } catch { fileStatus = fileHandle ? 'error' : 'none'; }
+  render();
+}
+async function linkNewFile() {
+  try {
+    const h = await window.showSaveFilePicker({ suggestedName: 'dragoncave-planner.json', types: FILE_TYPES });
+    fileHandle = h; fileStatus = 'ok';
+    await idbSetHandle(h);
+    if (!studio.savedAt) studio.savedAt = new Date().toISOString();
+    await writeFile(); closeDialog(); render();
+    toast(`Now saving to ${h.name}`);
+  } catch (e) { if (e && e.name !== 'AbortError') alert(`Could not create the save file: ${e.message || e}`); }
+}
+async function linkExistingFile() {
+  try {
+    const [h] = await window.showOpenFilePicker({ types: FILE_TYPES, multiple: false });
+    if ((await h.requestPermission({ mode: 'readwrite' })) !== 'granted') { toast('The planner needs permission to save to that file'); return; }
+    const prev = fileHandle;
+    fileHandle = h;
+    let data = null;
+    try { data = await readFileData(); } catch { data = null; }
+    const hasLocal = studio.artists.length || studio.games.length;
+    if (data) {
+      if (hasLocal && !confirm(`Load the plans saved in ${h.name}? They replace what is in this browser now.`)) { fileHandle = prev; return; }
+      studio = normalizeStudio(data); saveLocal(); lastRelId = null;
+    } else if (!confirm(`${h.name} has no planner data yet. Save your current plans into it?`)) { fileHandle = prev; return; }
+    fileStatus = 'ok';
+    await idbSetHandle(h);
+    if (!data) { if (!studio.savedAt) studio.savedAt = new Date().toISOString(); await writeFile(); }
+    closeDialog(); go('');
+    toast(`Now saving to ${h.name}`);
+  } catch (e) { if (e && e.name !== 'AbortError') alert(`Could not open the save file: ${e.message || e}`); }
+}
+async function reconnectFile() {
+  if (!fileHandle) return;
+  try {
+    if ((await fileHandle.requestPermission({ mode: 'readwrite' })) === 'granted') {
+      fileStatus = 'ok'; await syncWithFile(); render(); toast(`Reconnected to ${fileHandle.name}`);
+    } else toast('Permission not given. Changes are still saved in this browser.');
+  } catch (e) { fileStatus = 'error'; render(); }
+}
+async function unlinkFile() {
+  if (!confirm('Stop saving to this file? Your plans stay in this browser, and the file stays on your computer.')) return;
+  fileHandle = null; fileStatus = 'none'; clearTimeout(fileTimer);
+  try { await idbSetHandle(null); } catch { /* nothing stored */ }
+  closeDialog(); render(); toast('Save file unlinked');
+}
+function fileMenu() {
+  const cur = fileHandle && fileStatus === 'ok'
+    ? `<p class="text-sm text-zinc-300">Every change is saved to <span class="font-semibold text-white">${esc(fileHandle.name)}</span> on your computer${fileSavedAt ? `, last at ${new Date(fileSavedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}` : ''}.</p>`
+    : '<p class="text-sm text-zinc-300">Link a file on your computer and the planner saves every change to it automatically. Put it in a OneDrive, Google Drive or Dropbox folder and it is backed up to the cloud as well.</p>';
+  const btn = 'w-full inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold';
+  openDialog('Save file', `${cur}
+    <div class="space-y-2">
+      <button type="button" data-action="file-new" class="${btn} text-white bg-red-600 hover:bg-red-500">${ic('save')}${fileHandle ? 'Save to a new file' : 'Create a save file'}</button>
+      <button type="button" data-action="file-open" class="${btn} text-gold-400 border border-gold-500/50 hover:bg-gold-500/10">${ic('upload')}Open an existing save file</button>
+      ${fileHandle ? `<button type="button" data-action="file-unlink" class="${btn} text-zinc-400 hover:text-red-400">${ic('x')}Stop using ${esc(fileHandle.name)}</button>` : ''}
+    </div>
+    <p class="text-xs text-zinc-500">Works in Chrome and Edge on a computer. Choose "Allow on every visit" if Chrome asks, so it never needs asking again.</p>`, 'Done', () => true);
+}
+function updateFileBadge() {
+  const b = 'inline-flex items-center gap-2 rounded-md px-2.5 sm:px-3.5 py-2 text-xs font-medium border';
+  let html = '';
+  if (FS_OK) {
+    if (fileStatus === 'ok') html = `<button data-action="file-menu" title="Saving to ${esc(fileHandle.name)}" class="${b} bg-black text-gold-300 border-gold-500/50 hover:bg-gold-500/10"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="hidden md:inline max-w-[160px] truncate">${esc(fileHandle.name)}</span></button>`;
+    else if (fileStatus === 'reconnect') html = `<button data-action="file-reconnect" title="Reconnect your save file" class="${b} bg-orange-500/15 text-orange-200 border-orange-500/50 hover:bg-orange-500/25">${ic('link')}<span class="hidden md:inline">Reconnect file</span></button>`;
+    else if (fileStatus === 'error') html = `<button data-action="file-menu" title="The save file could not be reached" class="${b} bg-red-600/15 text-red-300 border-red-600/50">${ic('alert')}<span class="hidden md:inline">Save file problem</span></button>`;
+    else html = `<button data-action="file-menu" title="Save automatically to a file on this computer" class="${b} bg-black text-gold-400 border-gold-500/50 hover:bg-gold-500/10">${ic('save')}<span class="hidden md:inline">Link save file</span></button>`;
+  }
+  $$('[data-filebadge]').forEach((el) => { el.innerHTML = html; });
+  const note = fileStatus === 'ok' && fileHandle
+    ? `A DragonCave Studios tool · Every change is saved in this browser and to ${esc(fileHandle.name)} on your computer.`
+    : FS_OK ? 'A DragonCave Studios tool · Saved in this browser only. Use "Link save file" to save automatically to a file on your computer.'
+      : 'A DragonCave Studios tool · Saved in this browser only. Use Backup to export and Import to restore. (Automatic file saving needs Chrome or Edge on a computer.)';
+  $$('[data-footnote]').forEach((el) => { el.innerHTML = note; });
+}
 
 const T = (rel = state) => RELEASE_TYPES[(rel && rel.type) || 'album'].label;
 const TL = (rel = state) => ((rel && rel.type) === 'ep' ? 'EP' : T(rel).toLowerCase());   // for use mid-sentence
@@ -948,12 +1168,13 @@ function viewThisWeek(rs, studioItems) {
   const shown = weekExpanded ? now : now.slice(0, LIMIT);
   const row = (x) => `<li class="min-w-0 flex items-center gap-3 rounded-lg border px-3 py-2.5 ${x.d < 0 && !x.release ? 'bg-red-600/10 border-red-600/40' : 'bg-[#151515] border-zinc-800'}">
       <span class="w-8 h-8 shrink-0 rounded-lg grid place-items-center ${x.release ? 'bg-gold-500/15 text-gold-400' : x.d < 0 ? 'bg-red-600/20 text-red-400' : 'bg-zinc-800 text-zinc-300'}">${ic(x.icon)}</span>
-      <button data-action="goto-release" data-id="${x.r.id}" ${x.rel ? `data-rel="${x.rel.id}"` : ''} class="flex-1 min-w-0 text-left" title="Open on the Releases tab">
+      ${x.game ? `<button data-action="goto-game" data-id="${x.game.id}" class="flex-1 min-w-0 text-left" title="Open this game's plan">` : `<button data-action="goto-release" data-id="${x.r.id}" ${x.rel ? `data-rel="${x.rel.id}"` : ''} class="flex-1 min-w-0 text-left" title="Open on the Releases tab">`}
         <span class="block text-sm text-zinc-300 truncate">${x.text}</span>
         ${x.rel ? `<span class="block text-[11px] text-gold-300/80 truncate">${esc(artistName(x.rel))} · ${esc(releaseTitle(x.rel))}</span>` : ''}
+        ${x.game ? `<span class="block text-[11px] text-red-300/90 truncate">Game · ${esc(x.game.name)}</span>` : ''}
         <span class="block text-xs text-zinc-500">${fmtDay(x.date)} · <span class="${whenCls(x)} font-semibold">${when(x)}</span></span>
       </button>
-      ${x.key ? `<button data-action="quick-done" data-id="${x.r.id}" data-key="${x.key}" ${x.rel ? `data-rel="${x.rel.id}"` : ''} title="Mark as done" aria-label="Mark as done" class="w-8 h-8 shrink-0 rounded-full border border-zinc-600 text-zinc-500 hover:border-gold-500 hover:text-gold-400 grid place-items-center">${ic('check', 'w-4 h-4')}</button>` : ''}
+      ${x.key ? `<button data-action="${x.game ? 'game-done' : 'quick-done'}" data-id="${x.game ? x.game.id : x.r.id}" data-key="${x.key}" ${x.rel ? `data-rel="${x.rel.id}"` : ''} title="Mark as done" aria-label="Mark as done" class="w-8 h-8 shrink-0 rounded-full border border-zinc-600 text-zinc-500 hover:border-gold-500 hover:text-gold-400 grid place-items-center">${ic('check', 'w-4 h-4')}</button>` : ''}
     </li>`;
   let body;
   if (now.length) {
@@ -966,7 +1187,7 @@ function viewThisWeek(rs, studioItems) {
   return `<section class="mb-8 rounded-2xl border border-zinc-800 bg-[#0d0d0d] p-5">
     <div class="flex flex-wrap items-center gap-2">
       <span class="text-red-500">${ic('bell', 'w-5 h-5')}</span>
-      <h2 class="text-lg font-bold text-white">This Week</h2>${studioItems ? '<span class="text-xs text-zinc-500">· all artists</span>' : ''}
+      <h2 class="text-lg font-bold text-white">This Week</h2>${studioItems ? '<span class="text-xs text-zinc-500">· all music and games</span>' : ''}
       <span class="text-xs text-zinc-500">${fmtShort(t)} – ${fmtShort(addDays(t, 7))}</span>
       ${overdue ? pill(`${overdue} overdue`, 'red', 'alert') : now.length ? pill(`${plural(now.length, 'item')}`, 'grey') : ''}
     </div>
@@ -977,7 +1198,22 @@ function agoText(d) { return d < 14 ? `${plural(d, 'day')} ago` : d < 60 ? `${Ma
 function dateOnly(x) { return new Date(x.getFullYear(), x.getMonth(), x.getDate()); }
 function backupBanner() {
   const t = today();
-  if (!studio.artists.length) return '';
+  if (fileStatus === 'reconnect' && fileHandle) {
+    return `<div class="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-orange-500/40 bg-orange-500/10 px-4 py-3">
+      <span class="text-orange-300">${ic('link', 'w-5 h-5')}</span>
+      <p class="flex-1 min-w-[220px] text-sm text-orange-100">Reconnect <span class="font-semibold">${esc(fileHandle.name)}</span> so your changes are saved to it. <span class="text-orange-200/70">Until then they are saved in this browser only.</span></p>
+      <button data-action="file-reconnect" class="rounded-md bg-red-600 hover:bg-red-500 px-3 py-1.5 text-xs font-semibold text-white">Reconnect</button>
+    </div>`;
+  }
+  if (fileStatus === 'error') {
+    return `<div class="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-red-600/50 bg-red-600/10 px-4 py-3">
+      <span class="text-red-400">${ic('alert', 'w-5 h-5')}</span>
+      <p class="flex-1 min-w-[220px] text-sm text-red-100">The save file could not be reached. It may have been moved or renamed. <span class="text-red-200/70">Your changes are still saved in this browser.</span></p>
+      <button data-action="file-menu" class="rounded-md bg-red-600 hover:bg-red-500 px-3 py-1.5 text-xs font-semibold text-white">Fix it</button>
+    </div>`;
+  }
+  if (fileStatus === 'ok') return '';
+  if (!studio.artists.length && !studio.games.length) return '';
   if (studio.backupSnooze && parseISO(studio.backupSnooze) > t) return '';
   let msg;
   if (studio.lastBackup) {
@@ -991,7 +1227,8 @@ function backupBanner() {
   return `<div class="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-orange-500/40 bg-orange-500/10 px-4 py-3">
     <span class="text-orange-300">${ic('alert', 'w-5 h-5')}</span>
     <p class="flex-1 min-w-[220px] text-sm text-orange-100">${msg} <span class="text-orange-200/70">Everything is stored only in this browser, so clearing your browser data would erase it.</span></p>
-    <button data-action="export" class="rounded-md bg-red-600 hover:bg-red-500 px-3 py-1.5 text-xs font-semibold text-white">Back up now</button>
+    ${FS_OK ? '<button data-action="file-menu" class="rounded-md bg-red-600 hover:bg-red-500 px-3 py-1.5 text-xs font-semibold text-white">Save to a file automatically</button>' : ''}
+    <button data-action="export" class="rounded-md ${FS_OK ? 'border border-orange-400/50 text-orange-100 hover:bg-orange-500/20' : 'bg-red-600 hover:bg-red-500 text-white'} px-3 py-1.5 text-xs font-semibold">Back up now</button>
     <button data-action="snooze-backup" class="rounded-md px-2 py-1.5 text-xs text-orange-200/80 hover:text-white">Remind me in 7 days</button>
   </div>`;
 }
@@ -1014,8 +1251,42 @@ function relSummary(rel) {
 function studioWeekItems() {
   return studio.releases.filter((r) => r.created && isISO(r.releaseDate))
     .flatMap((rel) => withRelease(rel, () => weekItems(buildReleases()).map((x) => ({ ...x, rel }))))
+    .concat(studio.games.flatMap(gameWeekItems))
     .sort((a, b) => a.date - b.date || (a.release ? 1 : -1));
 }
+
+/* ---------------- Games: schedule ---------------- */
+const festOf = (g) => (g.festId === 'custom' ? g.fest : NEXT_FESTS.find((f) => f.id === g.festId) || {});
+function gameDates(g) {
+  const f = festOf(g);
+  const d = (s) => (isISO(s) ? parseISO(s) : null);
+  return { page: d(g.storeDate), reg: d(f.reg), review: d(f.review), fest: d(f.start), festEnd: d(f.end), launch: d(g.launchDate) };
+}
+function buildGame(g) {
+  const D = gameDates(g), t = today();
+  const tasks = GAME_TASKS.map((x) => {
+    const base = D[x.at];
+    const date = base ? addDays(base, x.off) : null;
+    return { ...x, date, d: date ? diffDays(t, date) : null, done: !!g.checks[x.key] };
+  });
+  const warns = [];
+  if (D.page && D.reg && D.page > D.reg) warns.push('The store page must be public before the Next Fest sign-up deadline.');
+  if (D.launch && D.festEnd && D.launch <= D.festEnd) warns.push('Launch must come after Next Fest ends, or the game cannot take part.');
+  if (D.launch && D.page && D.launch < addDays(D.page, 14)) warns.push('Steam needs the store page live as Coming Soon for at least 2 weeks before launch.');
+  const done = tasks.filter((x) => x.done).length;
+  const launched = !!g.checks.launched || (D.launch && diffDays(t, D.launch) < 0);
+  return { D, tasks, warns, done, pct: Math.round((done / tasks.length) * 100), launched };
+}
+function gameWeekItems(g) {
+  const b = buildGame(g);
+  if (b.launched) return [];
+  return b.tasks.filter((x) => x.date && !x.done).map((x) => {
+    const isLaunch = x.key === 'launched';
+    return { game: g, r: { id: g.id }, date: x.date, d: x.d, icon: x.icon, key: isLaunch ? null : x.key, release: isLaunch,
+      text: isLaunch ? `<span class="font-semibold text-white">${esc(g.name)}</span> launches` : esc(x.label), plain: isLaunch ? `${g.name} launches` : `${x.label} (${g.name})` };
+  });
+}
+const monthsText = (days) => (days >= 56 ? `about ${plural(Math.round(days / 30.4), 'month')}` : plural(Math.round(days / 7), 'week'));
 function artistCard(a) {
   const sums = studio.releases.filter((r) => r.artistId === a.id).map((r) => ({ r, s: relSummary(r) }));
   const active = sums.filter((x) => !x.s.draft && !x.s.released).sort((p, q) => p.s.fin.date - q.s.fin.date);
@@ -1034,13 +1305,47 @@ function artistCard(a) {
       : '<p class="text-sm text-zinc-500">No active campaign</p>'}</div>
   </a>`;
 }
-const studioFooter = '<p class="mt-12 text-center text-xs text-zinc-600">A DragonCave Studios tool · All data is saved only in this browser. Use Backup to export it and Import to restore it on another device.</p>';
+const studioFooter = '<p class="mt-12 text-center text-xs text-zinc-600" data-footnote></p>';
 const redBtn = 'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-500';
+function gameCard(g) {
+  const b = buildGame(g);
+  const next = b.tasks.filter((x) => x.date && !x.done).sort((p, q) => p.date - q.date)[0];
+  const overdue = b.launched ? 0 : b.tasks.filter((x) => x.date && !x.done && x.d < 0).length;
+  return `<a href="#/game/${g.id}" class="rounded-2xl bg-[#111] border ${overdue ? 'border-red-600/50' : 'border-zinc-800'} hover:border-red-500/60 p-5 flex flex-col gap-4 transition-colors">
+    <div class="flex items-center gap-3">
+      <span class="w-14 h-14 shrink-0 rounded-xl grid place-items-center bg-gradient-to-br from-red-600 to-red-900 ring-2 ring-red-500/60 text-white">${ic('gamepad', 'w-7 h-7')}</span>
+      <div class="min-w-0 flex-1"><p class="text-lg font-bold text-white truncate">${esc(g.name)}</p>
+      <p class="text-sm text-zinc-400 truncate">${esc(g.platforms || 'Game')}${b.D.launch ? ` · launch ${fmtMed(b.D.launch)}` : ''}</p></div>
+      ${b.launched ? pill('Launched', 'sky') : overdue ? pill(`${overdue} overdue`, 'red', 'alert') : ''}
+    </div>
+    <div class="rounded-lg bg-[#1a1a1a] border border-zinc-800/60 p-3">${next
+      ? `<p class="text-[11px] uppercase tracking-wider text-zinc-500">Next step</p><p class="text-sm font-semibold text-white truncate">${esc(next.label)}</p>
+         <p class="text-xs text-zinc-400">${fmtDay(next.date)} · <span class="${dueInfo(next.d, false).cls}">${dueInfo(next.d, false).text}</span></p>`
+      : `<p class="text-sm text-zinc-500">${b.launched ? 'Launched' : 'Set the dates to build the plan'}</p>`}
+      <div class="mt-2 flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-zinc-800 overflow-hidden"><div class="h-full bg-red-500" style="width:${b.pct}%"></div></div><span class="text-[11px] text-zinc-400 tabular-nums">${b.pct}%</span></div>
+    </div>
+  </a>`;
+}
+function gamesSection() {
+  const has = studio.games.length > 0;
+  return `<div class="mt-12 flex flex-wrap items-end justify-between gap-3 mb-4">
+      <div><h2 class="flex items-center gap-2 text-xl font-bold text-white"><span class="text-red-500">${ic('gamepad', 'w-5 h-5')}</span>Games</h2>
+      <p class="text-sm text-zinc-400">Store page, Next Fest and launch, planned in one place</p></div>
+      ${has ? `<button data-action="add-game" class="${redBtn}">${ic('plus')}Add game</button>` : ''}
+    </div>
+    ${has ? `<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${studio.games.map(gameCard).join('')}</div>` : `
+    <div class="rounded-2xl border border-dashed border-red-600/40 bg-[#0d0d0d] px-6 py-10 text-center">
+      <span class="inline-block text-red-500">${ic('gamepad', 'w-10 h-10')}</span>
+      <p class="mt-3 text-lg font-bold text-white">Plan a game launch</p>
+      <p class="mt-1 text-sm text-zinc-400">Set the store page date, pick a Next Fest and a launch date, and the planner lists every step.</p>
+      <button data-action="add-game" class="mt-5 ${redBtn}">${ic('plus')}Add your first game</button>
+    </div>`}`;
+}
 function renderHome() {
-  document.title = 'Music Release Strategy Planner – DragonCave Studios';
+  document.title = 'Release Strategy Planner – DragonCave Studios';
   const has = studio.artists.length > 0;
   $('#studioMain').innerHTML = `${backupBanner()}
-    ${has ? viewThisWeek(null, studioWeekItems()) : ''}
+    ${has || studio.games.length ? viewThisWeek(null, studioWeekItems()) : ''}
     <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
       <div><h2 class="flex items-center gap-2 text-xl font-bold text-white"><span class="text-gold-400">${ic('users', 'w-5 h-5')}</span>Artists</h2>
       <p class="text-sm text-zinc-400">Everyone releasing through DragonCave Studios</p></div>
@@ -1054,6 +1359,75 @@ function renderHome() {
       <button data-action="add-artist" class="mt-5 ${redBtn}">${ic('plus')}Add your first artist</button>
       <button data-action="import" class="mt-3 block mx-auto text-xs text-zinc-500 hover:text-zinc-300">Have a backup? Import it</button>
     </div>`}
+    ${gamesSection()}
+    ${studioFooter}`;
+}
+function renderGame(id) {
+  const g = studio.games.find((x) => x.id === id);
+  document.title = `${g.name} – Release Planner`;
+  const b = buildGame(g), f = festOf(g), D = b.D;
+  const dateField = (label, field, value, hint) => `<label class="block"><span class="text-xs font-semibold text-zinc-400">${label}</span>
+      <input type="date" data-gfield="${field}" value="${esc(value || '')}" class="field mt-1.5" />${hint ? `<span class="block mt-1 text-[11px] text-zinc-500">${hint}</span>` : ''}</label>`;
+  const festOpts = `<option value="">Not chosen yet</option>${NEXT_FESTS.map((x) => `<option value="${x.id}" ${g.festId === x.id ? 'selected' : ''}>${x.label} (${fmtShort(parseISO(x.start))} – ${fmtShort(parseISO(x.end))})</option>`).join('')}<option value="custom" ${g.festId === 'custom' ? 'selected' : ''}>Custom dates (a later edition)</option>`;
+  const custom = g.festId === 'custom' ? `<div class="sm:col-span-2 grid grid-cols-2 gap-3 rounded-xl border border-zinc-800 bg-[#151515] p-3">
+      ${dateField('Next Fest starts', 'fest.start', g.fest.start)}${dateField('Next Fest ends', 'fest.end', g.fest.end)}
+      ${dateField('Sign-up deadline', 'fest.reg', g.fest.reg)}${dateField('Review deadline', 'fest.review', g.fest.review, 'Demo and store page submitted')}
+      <p class="col-span-2 text-[11px] text-zinc-500">Copy these from Valve's Steamworks page once the edition is announced.</p></div>` : '';
+  const facts = [];
+  if (D.page && D.fest) facts.push(`${monthsText(diffDays(D.page, D.fest))} of wishlists before Next Fest`);
+  if (D.festEnd && D.launch && D.launch > D.festEnd) facts.push(`launch ${monthsText(diffDays(D.festEnd, D.launch))} after Next Fest`);
+  if (f.reg) facts.push(`sign-up closes ${fmtMed(parseISO(f.reg))}`);
+  const groupHead = { page: D.page ? fmtDay(D.page) : 'Set the store page date', fest: D.fest ? `${fmtShort(D.fest)} – ${fmtMed(D.festEnd)}` : 'Choose a Next Fest', launch: D.launch ? fmtDay(D.launch) : 'Set the launch date' };
+  const taskRowG = (x) => {
+    const due = x.date ? (b.launched && !x.done ? { text: 'Passed', cls: 'text-zinc-500' } : dueInfo(x.d, x.done)) : null;
+    return `<label class="flex items-center gap-3 rounded-lg border px-3 py-2.5 cursor-pointer transition-colors ${x.done ? 'bg-gold-500/[.06] border-gold-500/25' : x.date && x.d < 0 && !b.launched ? 'bg-red-600/10 border-red-600/40' : 'bg-[#1a1a1a] border-zinc-800 hover:bg-[#202020]'}">
+      <span class="w-7 h-7 shrink-0 rounded-md grid place-items-center ${x.done ? 'bg-gold-500/15 text-gold-400' : 'bg-zinc-800 text-zinc-400'}">${ic(x.icon, 'w-3.5 h-3.5')}</span>
+      <span class="flex-1 min-w-0"><span class="block text-sm font-medium ${x.done ? 'text-white' : 'text-zinc-200'}">${esc(x.label)}</span>
+        <span class="block text-xs text-zinc-500">${x.date ? `${fmtDay(x.date)} · <span class="${due.cls}">${due.text}</span>` : 'Date not set yet'}</span></span>
+      <span class="relative inline-flex shrink-0">
+        <input type="checkbox" class="peer sr-only" data-gcheck="${g.id}" data-key="${x.key}" ${x.done ? 'checked' : ''} aria-label="${esc(x.label)}">
+        <span class="w-10 h-[22px] rounded-full bg-zinc-600 peer-checked:bg-gold-500 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-gold-400/60"></span>
+        <span class="absolute top-[3px] left-[3px] w-4 h-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-[18px]"></span>
+      </span></label>`;
+  };
+  const groups = Object.entries(MILESTONES).map(([k, m]) => {
+    const list = b.tasks.filter((x) => x.group === k).sort((p, q) => (p.date && q.date ? p.date - q.date : p.date ? -1 : q.date ? 1 : 0));
+    const n = list.filter((x) => x.done).length;
+    return `<section class="rounded-2xl border border-zinc-800 bg-[#0d0d0d] p-5">
+      <div class="flex flex-wrap items-center gap-2"><span class="text-red-500">${ic(m.icon, 'w-5 h-5')}</span><h3 class="text-lg font-bold text-white">${m.label}</h3>
+        <span class="text-xs text-zinc-500">${groupHead[k]}</span><span class="ml-auto">${dots(n, list.length)}</span></div>
+      <div class="mt-4 grid gap-2">${list.map(taskRowG).join('')}</div></section>`;
+  }).join('');
+  $('#studioMain').innerHTML = `
+    <a href="#/" class="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-gold-400">${ic('arrowLeft')}Back to the studio</a>
+    <div class="mt-4 flex flex-wrap items-center gap-4">
+      <span class="w-16 h-16 shrink-0 rounded-2xl grid place-items-center bg-gradient-to-br from-red-600 to-red-900 ring-2 ring-red-500/60 text-white">${ic('gamepad', 'w-8 h-8')}</span>
+      <div class="min-w-0 flex-1">
+        <button data-action="rename-game" data-id="${g.id}" class="group inline-flex items-center gap-2 max-w-full text-left" title="Rename game">
+          <span class="truncate text-2xl sm:text-3xl font-extrabold text-white">${esc(g.name)}</span>${ic('pencil', 'w-4 h-4 shrink-0 text-zinc-500 group-hover:text-red-500')}</button>
+        <p class="text-sm text-zinc-400">${b.done}/${b.tasks.length} steps done · DragonCave Studios</p>
+      </div>
+      <button data-action="delete-game" data-id="${g.id}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium border border-zinc-700 text-zinc-400 hover:text-red-400 hover:border-red-500/50" title="Delete game">${ic('trash')}</button>
+    </div>
+    ${b.warns.map((w) => `<div class="mt-4 flex items-center gap-3 rounded-xl border border-orange-500/40 bg-orange-500/10 px-4 py-3 text-sm text-orange-100"><span class="text-orange-300">${ic('alert', 'w-5 h-5')}</span>${esc(w)}</div>`).join('')}
+    <section class="mt-6 rounded-2xl border border-zinc-800 bg-[#0d0d0d] p-5">
+      <h3 class="flex items-center gap-2 text-lg font-bold text-white"><span class="text-gold-400">${ic('calendar', 'w-5 h-5')}</span>Key dates</h3>
+      <p class="text-sm text-zinc-400">Every step below is counted back from these.</p>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <label class="block sm:col-span-2"><span class="text-xs font-semibold text-zinc-400">Stores</span><input data-gtext="platforms" value="${esc(g.platforms)}" maxlength="100" placeholder="e.g. Steam, Epic, GOG" class="field mt-1.5" /></label>
+        ${dateField('Store page goes live', 'storeDate', g.storeDate, 'When wishlists start')}
+        <label class="block"><span class="text-xs font-semibold text-zinc-400">Steam Next Fest (demo)</span><select data-gfield="festId" class="field mt-1.5">${festOpts}</select>
+          <span class="block mt-1 text-[11px] text-zinc-500">One Next Fest per game</span></label>
+        ${custom}
+        ${dateField('Launch day', 'launchDate', g.launchDate, 'About a month after Next Fest ends')}
+      </div>
+      ${facts.length ? `<p class="mt-4 text-sm text-gold-300">${esc(facts.join(' · '))}</p>` : ''}
+    </section>
+    <div class="mt-6 grid gap-6 lg:grid-cols-3">${groups}</div>
+    <section class="mt-6 rounded-2xl border border-zinc-800 bg-[#0d0d0d] p-5">
+      <h3 class="flex items-center gap-2 text-lg font-bold text-white"><span class="text-gold-400">${ic('file', 'w-5 h-5')}</span>Notes</h3>
+      <textarea data-gnotes="${g.id}" rows="4" maxlength="5000" placeholder="Anything to remember for this launch" class="field mt-3">${esc(g.notes)}</textarea>
+    </section>
     ${studioFooter}`;
 }
 function releaseTile({ r, s }) {
@@ -1124,6 +1498,7 @@ function route() {
   const [a, id] = location.hash.replace(/^#\/?/, '').split('/');
   if (a === 'release' && studio.releases.some((r) => r.id === id)) return { screen: 'release', id };
   if (a === 'artist' && studio.artists.some((x) => x.id === id)) return { screen: 'artist', id };
+  if (a === 'game' && studio.games.some((x) => x.id === id)) return { screen: 'game', id };
   return { screen: 'home' };
 }
 function go(path) { const h = `#/${path}`; if (location.hash !== h) location.hash = h; else render(); }
@@ -1147,9 +1522,11 @@ function render() {
   $('#studio').classList.toggle('hidden', !!rel);
   $('#landing').classList.toggle('hidden', !rel || showPlan);
   $('#app').classList.toggle('hidden', !showPlan);
-  if (!rel) { if (rt.screen === 'artist') renderArtist(rt.id); else renderHome(); }
+  if (!rel) { if (rt.screen === 'artist') renderArtist(rt.id); else if (rt.screen === 'game') renderGame(rt.id); else renderHome(); }
   else if (showPlan) renderApp();
   else renderLanding();
+  updateFileBadge();
+  hydrateIcons();
 }
 
 function scheduleSummary() {
@@ -1511,6 +1888,43 @@ document.addEventListener('click', (ev) => {
     case 'week-more': weekExpanded = !weekExpanded; render(); break;
     case 'snooze-backup': studio.backupSnooze = toISO(addDays(today(), 7)); save(); render(); break;
     case 'export-artist': exportArtist(el.dataset.id); break;
+    case 'file-menu': fileMenu(); break;
+    case 'file-new': linkNewFile(); break;
+    case 'file-open': linkExistingFile(); break;
+    case 'file-reconnect': reconnectFile(); break;
+    case 'file-unlink': unlinkFile(); break;
+    case 'goto-game': go(`game/${el.dataset.id}`); break;
+    case 'game-done': {
+      const g = studio.games.find((x) => x.id === el.dataset.id);
+      if (!g) break;
+      g.checks[el.dataset.key] = true; save(); render();
+      const t = GAME_TASKS.find((x) => x.key === el.dataset.key);
+      toast(`${t ? t.label : 'Step'} marked done for ${g.name}`); break;
+    }
+    case 'add-game':
+      openDialog('Add game', `${nameField('Game name', 'gameName', '', 'e.g. Driftfire')}${nameField('Stores (optional)', 'gameStores', '', 'e.g. Steam, Epic, GOG')}`, 'Add game', (f) => {
+        const name = f.gameName.value.trim();
+        if (!name) { f.gameName.focus(); return false; }
+        const g = normalizeGame({ id: uid(), name, platforms: f.gameStores.value.trim() });
+        studio.games.push(g); save(); go(`game/${g.id}`); return true;
+      });
+      break;
+    case 'rename-game': {
+      const g = studio.games.find((x) => x.id === el.dataset.id);
+      if (!g) break;
+      openDialog('Rename game', nameField('Game name', 'gameName', g.name, ''), 'Save', (f) => {
+        const name = f.gameName.value.trim();
+        if (!name) { f.gameName.focus(); return false; }
+        g.name = name.slice(0, 100); save(); render(); return true;
+      });
+      break;
+    }
+    case 'delete-game': {
+      const g = studio.games.find((x) => x.id === el.dataset.id);
+      if (!g) break;
+      if (!confirm(`Delete ${g.name} and its launch plan? This can't be undone.`)) break;
+      studio.games = studio.games.filter((x) => x !== g); save(); go(''); toast(`${g.name} deleted`); break;
+    }
     case 'dialog-cancel': closeDialog(); break;
     case 'add-artist':
       openDialog('Add artist', nameField('Artist name', 'artistName', '', 'e.g. Nova Lane'), 'Add artist', (f) => {
@@ -1568,6 +1982,24 @@ document.addEventListener('click', (ev) => {
 
 document.addEventListener('change', (ev) => {
   const t = ev.target;
+  if (t.matches('input[data-gcheck]')) {
+    const g = studio.games.find((x) => x.id === t.dataset.gcheck);
+    if (!g) return;
+    if (t.checked) g.checks[t.dataset.key] = true; else delete g.checks[t.dataset.key];
+    save(); const y = window.scrollY; render(); window.scrollTo({ top: y });
+    if (t.checked && t.dataset.key === 'launched') toast(`${g.name} has launched 🎉`);
+    return;
+  }
+  if (t.matches('[data-gfield]')) {
+    const g = studio.games.find((x) => x.id === route().id);
+    if (!g) return;
+    const f = t.dataset.gfield, v = t.value;
+    if (f === 'festId') g.festId = v;
+    else if (f.startsWith('fest.')) { const k = f.slice(5); if (isISO(v)) g.fest[k] = v; else delete g.fest[k]; }
+    else g[f] = isISO(v) ? v : '';
+    save(); const y = window.scrollY; render(); window.scrollTo({ top: y });
+    return;
+  }
   if (t.matches('input[data-explicit]')) {
     const id = t.dataset.explicit;
     (state.details[id] = state.details[id] || {}).explicit = t.checked; save(); return;
@@ -1604,6 +2036,12 @@ document.addEventListener('focusout', (ev) => {
 
 document.addEventListener('input', (ev) => {
   const t = ev.target;
+  if (t.matches('[data-gnotes]') || t.matches('[data-gtext]')) {
+    const g = studio.games.find((x) => x.id === route().id);
+    if (!g) return;
+    if (t.dataset.gnotes) g.notes = t.value.slice(0, 5000); else g.platforms = t.value.slice(0, 100);
+    save(); return;
+  }
   if (t.matches('[data-detail]')) {
     const id = t.dataset.detail;
     const v = t.dataset.field === 'isrc' ? t.value.toUpperCase() : t.value;
@@ -1675,6 +2113,7 @@ $('#favicon').href = LOGO;
 
 hydrateIcons();
 render();
+initFile();
 })();
 </script>
 </body>
